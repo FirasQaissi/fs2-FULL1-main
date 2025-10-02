@@ -9,7 +9,7 @@ const sampleProducts = [
     version: "v2.1",
     features: ["WiFi Connectivity", "Mobile App Control", "Voice Assistant Compatible", "Auto-Lock", "Guest Access"],
     price: 299.99,
-    image: "/src/images/AllegionShlageOmnia_SatinNickel_Front_DigitsOn_Final_02.png.thumb.1280.1280_394x.webp"
+    image: "/images/productsImages/AllegionShlageOmnia_SatinNickel_Front_DigitsOn_Final_02.png.thumb.1280.1280_394x.webp"
   },
   {
     name: "Ultra-Secure Smart Lock Pro",
@@ -17,7 +17,7 @@ const sampleProducts = [
     version: "v3.0",
     features: ["Fingerprint Scanner", "Facial Recognition", "Anti-Tamper Alarm", "Backup Key", "Weather Resistant"],
     price: 449.99,
-    image: "/src/images/Hd43ab953807844cf9cabc6346c167e89V.avif"
+    image: "/images/productsImages/Hd43ab953807844cf9cabc6346c167e89V.avif"
   },
   {
     name: "Modern Smart Lock Classic",
@@ -25,7 +25,7 @@ const sampleProducts = [
     version: "v1.5",
     features: ["Bluetooth Control", "Keypad Entry", "Battery Backup", "Easy Installation", "LED Indicators"],
     price: 199.99,
-    image: "/src/images/images22.jpeg"
+    image: "/images/productsImages/images22.jpeg"
   },
   {
     name: "Premium Smart Lock Elite",
@@ -33,7 +33,7 @@ const sampleProducts = [
     version: "v2.5",
     features: ["Zigbee Protocol", "HomeKit Compatible", "Stainless Steel", "Customizable Codes", "Activity Log"],
     price: 399.99,
-    image: "/src/images/imagesddwe.jpeg"
+    image: "/images/productsImages/imagesddwe.jpeg"
   },
   {
     name: "Compact Smart Lock Mini",
@@ -41,7 +41,7 @@ const sampleProducts = [
     version: "v1.2",
     features: ["Compact Design", "Quick Setup", "Low Power Consumption", "Remote Monitoring", "Durable Build"],
     price: 149.99,
-    image: "/src/images/s-l1200.jpg"
+    image: "/images/productsImages/s-l1200.jpg"
   },
   {
     name: "Smart Lock Web Series",
@@ -49,7 +49,7 @@ const sampleProducts = [
     version: "v2.0",
     features: ["Cloud Storage", "Remote Updates", "Multi-User Management", "Geofencing", "Integration Hub"],
     price: 329.99,
-    image: "/src/images/smart_lock_web1.jpg"
+    image: "/images/productsImages/smart_lock_web1.jpg"
   },
   {
     name: "Designer Smart Lock Collection",
@@ -57,7 +57,7 @@ const sampleProducts = [
     version: "v1.8",
     features: ["Designer Finish", "Touch Interface", "Silent Operation", "Energy Efficient", "Warranty Included"],
     price: 279.99,
-    image: "/src/images/Untitled-design-48-1.png"
+    image: "/images/productsImages/Untitled-design-48-1.png"
   }
 ];
 
