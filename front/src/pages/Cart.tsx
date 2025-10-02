@@ -19,7 +19,7 @@ import {
   Snackbar,
   Alert,
 } from '@mui/material';
-import Grid from '@mui/material/Grid';
+// Removed Grid to avoid TS type/version conflicts; using Box-based grid layout
 import {
   Add as AddIcon,
   Remove as RemoveIcon,
@@ -130,10 +130,9 @@ export default function Cart() {
           </Box>
         </Box>
 
-        <Grid container spacing={4}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' }, gap: 4 }}>
           {/* Cart Items */}
-              {/* Cart Items */}
-          <Grid item xs={12} md={8}>
+          <Box>
             <Paper elevation={0} sx={{ borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
               <TableContainer>
                 <Table>
@@ -148,9 +147,9 @@ export default function Cart() {
                   </TableHead>
                   <TableBody>
                     {cartItems.map((item) => {
-                      const productId = item.id || item._id;
+                      const productId = item.id || item._id || '';
                       return (
-                        <TableRow key={productId}>
+                        <TableRow key={String(productId)}>
                           <TableCell>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                               <Box
@@ -180,7 +179,7 @@ export default function Cart() {
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
                               <IconButton
                                 size="small"
-                                onClick={() => handleQuantityChange(productId, item.quantity - 1)}
+                                onClick={() => handleQuantityChange(String(productId), item.quantity - 1)}
                                 disabled={item.quantity <= 1}
                               >
                                 <RemoveIcon />
@@ -191,7 +190,7 @@ export default function Cart() {
                                 onChange={(e) => {
                                   const value = parseInt(e.target.value);
                                   if (!isNaN(value) && value > 0) {
-                                    handleQuantityChange(productId, value);
+                                    handleQuantityChange(String(productId), value);
                                   }
                                 }}
                                 sx={{ width: 60 }}
@@ -202,7 +201,7 @@ export default function Cart() {
                               />
                               <IconButton
                                 size="small"
-                                onClick={() => handleQuantityChange(productId, item.quantity + 1)}
+                                onClick={() => handleQuantityChange(String(productId), item.quantity + 1)}
                               >
                                 <AddIcon />
                               </IconButton>
@@ -221,7 +220,7 @@ export default function Cart() {
                           <TableCell align="center">
                             <IconButton
                               color="error"
-                              onClick={() => handleRemoveItem(productId)}
+                              onClick={() => handleRemoveItem(String(productId))}
                             >
                               <DeleteIcon />
                             </IconButton>
@@ -246,10 +245,10 @@ export default function Cart() {
                 </Button>
               </Box>
             </Paper>
-          </Grid>
+          </Box>
 
           {/* Cart Summary */}
-          <Grid item xs={12} md={4}>
+          <Box>
             <Card elevation={0} sx={{ borderRadius: 3, border: '1px solid', borderColor: 'divider', position: 'sticky', top: 20 }}>
               <CardContent sx={{ p: 3 }}>
                 <Typography variant="h6" fontWeight={700} gutterBottom>
@@ -290,8 +289,8 @@ export default function Cart() {
                 </Typography>
               </CardContent>
             </Card>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Container>
 
       {/* Snackbar */}

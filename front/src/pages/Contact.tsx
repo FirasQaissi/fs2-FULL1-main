@@ -12,7 +12,7 @@ import {
   useTheme,
   IconButton,
 } from '@mui/material';
-import Grid from '@mui/material/Grid';
+// Avoid Grid type issues on Vercel; use Box with CSS grid
 import {
   Email as EmailIcon,
   Phone as PhoneIcon,
@@ -171,9 +171,9 @@ export default function Contact() {
             </Box>
           </Fade>
 
-          <Grid container spacing={6}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '2fr 1fr' }, gap: 6 }}>
             {/* Contact Form */}
-            <Grid item xs={12} md={8}>
+            <Box>
               <Fade in timeout={800}>
                 <Paper
                   elevation={8}
@@ -218,8 +218,8 @@ export default function Contact() {
                   )}
 
                    <Box component="form" onSubmit={handleSubmit} dir="rtl">
-                     <Grid container spacing={3}>
-                       <Grid item xs={12} sm={6} component="div">
+                     <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 3 }}>
+                       <Box>
                          <TextField
                            fullWidth
                            label="שם מלא"
@@ -234,8 +234,8 @@ export default function Contact() {
                              },
                            }}
                          />
-                       </Grid>
-                      <Grid item xs={12} sm={6} component="div">
+                       </Box>
+                      <Box>
                         <TextField
                           fullWidth
                           label="אימייל"
@@ -251,8 +251,8 @@ export default function Contact() {
                             },
                           }}
                         />
-                      </Grid>
-                      <Grid item xs={12} sm={6} component="div">
+                      </Box>
+                      <Box>
                         <TextField
                           fullWidth
                           label="טלפון"
@@ -266,8 +266,8 @@ export default function Contact() {
                             },
                           }}
                         />
-                      </Grid>
-                      <Grid item xs={12} sm={6} component="div">
+                      </Box>
+                      <Box>
                         <TextField
                           fullWidth
                           label="נושא"
@@ -282,8 +282,8 @@ export default function Contact() {
                             },
                           }}
                         />
-                      </Grid>
-                      <Grid item xs={12} component="div">
+                      </Box>
+                      <Box sx={{ gridColumn: '1 / -1' }}>
                         <TextField
                           fullWidth
                           label="הודעה"
@@ -300,8 +300,8 @@ export default function Contact() {
                             },
                           }}
                         />
-                      </Grid>
-                      <Grid item xs={12} component="div">
+                      </Box>
+                      <Box sx={{ gridColumn: '1 / -1' }}>
                         <Button
                           type="submit"
                           variant="contained"
@@ -326,15 +326,15 @@ export default function Contact() {
                         >
                           {loading ? 'שולח...' : 'שלח פניה'}
                         </Button>
-                      </Grid>
-                    </Grid>
+                      </Box>
+                    </Box>
                   </Box>
                 </Paper>
               </Fade>
-            </Grid>
+            </Box>
 
             {/* Contact Info */}
-            <Grid item xs={12} lg={4} component="div"     >
+            <Box>
               <Stack spacing={4}>
                 {/* Contact Information */}
                 <Fade in timeout={1000}>
@@ -456,8 +456,8 @@ export default function Contact() {
                   </Paper>
                 </Fade>
               </Stack>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </Container>
       </Box>
       <Footer />

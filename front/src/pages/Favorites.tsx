@@ -8,7 +8,7 @@ import {
   IconButton,
   Snackbar
 } from '@mui/material';
-import Grid from '@mui/material/Grid';
+// Avoid Grid type/version conflicts on Vercel; use Box grid
 import { 
   FavoriteOutlined as FavoriteIcon,
   Delete as DeleteIcon
@@ -164,15 +164,15 @@ export default function Favorites() {
                   </Typography>
                 </Box>
               ) : (
-                <Grid container spacing={3}>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, gap: 3 }}>
                   {favorites.map((product) => {
                     const productId = product.id || (product as Product & { _id?: string })._id;
                     return (
-                      <Grid item xs={12} sm={6} md={4} lg={3} key={productId}>
+                      <Box key={productId}>
                         <Box sx={{ position: 'relative' }}>
                           <ProductCard product={product} />
                           <IconButton
-                            onClick={() => handleRemoveFromFavorites(productId!)}
+                            onClick={() => handleRemoveFromFavorites(String(productId))}
                             sx={{
                               position: 'absolute',
                               top: 8,
@@ -189,10 +189,10 @@ export default function Favorites() {
                             <DeleteIcon />
                           </IconButton>
                         </Box>
-                      </Grid>
+                      </Box>
                     );
                   })}
-                </Grid>
+                </Box>
               )}
             </Box>
           )}

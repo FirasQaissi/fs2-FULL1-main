@@ -12,8 +12,7 @@ import {
 } from '@mui/material';
 import {
   Lock as LockIcon,
-  CheckCircle as CheckCircleIcon,
-  Error as ErrorIcon,
+  CheckCircle as CheckCircleIcon
 } from '@mui/icons-material';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
