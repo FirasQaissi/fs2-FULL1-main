@@ -302,14 +302,14 @@ const features = [
             }}
           >
             {[
-              '/src/images/productsImages/AllegionShlageOmnia_SatinNickel_Front_DigitsOn_Final_02.png.thumb.1280.1280_394x.webp',
-              '/src/images/productsImages/images22-removebg-preview.png',
-              '/src/images/productsImages/s-l1200-removebg-preview.png',
-              '/src/images/productsImages/smart_lock_web1-removebg-preview.png',
-              '/src/images/productsImages/Untitled-design-48-1-removebg-preview.png',
-              '/src/images/productsImages/65.png',
-              '/src/images/productsImages/Ruveno-Slim-Smart-Fingerprint-Door-Lock-eeb25cc-removebg-preview.png', 
-              '/src/images/productsImages/64.png'
+              '/images/productsImages/AllegionShlageOmnia_SatinNickel_Front_DigitsOn_Final_02.png.thumb.1280.1280_394x.webp',
+              '/images/productsImages/images22-removebg-preview.png',
+              '/images/productsImages/s-l1200-removebg-preview.png',
+              '/images/productsImages/smart_lock_web1-removebg-preview.png',
+              '/images/productsImages/Untitled-design-48-1-removebg-preview.png',
+              '/images/productsImages/65.png',
+              '/images/productsImages/Ruveno-Slim-Smart-Fingerprint-Door-Lock-eeb25cc-removebg-preview.png', 
+              '/images/productsImages/64.png'
             ].map((imgSrc, index) => {
               return (
                 <Box
@@ -496,7 +496,7 @@ const features = [
               }}>
                 <Box
                   component="img"
-                  src="/src/images/93098556593.png"
+                  src="/images/93098556593.png"
                   alt="Smart Lock"
                   sx={{
                     marginTop: '-55px',
@@ -732,7 +732,7 @@ const features = [
             <Box sx={{ flex: 1, width: '100%', position: 'relative' }}>
               <Box
                 component="img"
-                src="/src/images/661.jpg"
+                src="/images/661.jpg"
                 alt="Advanced Biometric Technology"
                 sx={{
                   width: '100%',

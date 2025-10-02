@@ -193,7 +193,7 @@ export default function Navbar({ onLoginClick, onRegisterClick }: NavbarProps = 
     >
       <Box sx={{ p: 2 }}>
         <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Box component="img" src="/src/images/logo5.png" alt="SmartGate" sx={{ height: 40, width: 'auto' }} />
+          <Box component="img" src="/images/logo5.png" alt="SmartGate" sx={{ height: 40, width: 'auto' }} />
           <Typography sx={{ fontWeight: 800, letterSpacing: '0.5px' }}>
             SmartGate
           </Typography>
@@ -422,7 +422,7 @@ export default function Navbar({ onLoginClick, onRegisterClick }: NavbarProps = 
               gap: 1.5,
             }}
           >
-            <Box component="img" src="/src/images/logo5.png" alt="Smart Gate" sx={{ height: 45, width: 'auto' }} />
+            <Box component="img" src="/images/logo5.png" alt="Smart Gate" sx={{ height: 45, width: 'auto' }} />
             <Typography
               variant="h5"
               sx={{

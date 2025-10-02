@@ -12,14 +12,14 @@ const mockCartItems = [
     name: 'Allegion Schlage Omnia Smart Lock',
     price: 299.99,
     quantity: 1,
-    image: '/src/images/AllegionShlageOmnia_SatinNickel_Front_DigitsOn_Final_02.png.thumb.1280.1280_394x.webp'
+    image: '/images/AllegionShlageOmnia_SatinNickel_Front_DigitsOn_Final_02.png.thumb.1280.1280_394x.webp'
   },
   {
     id: '2',
     name: 'Ultra-Secure Smart Lock Pro',
     price: 449.99,
     quantity: 2,
-    image: '/src/images/Hd43ab953807844cf9cabc6346c167e89V.avif'
+    image: '/images/Hd43ab953807844cf9cabc6346c167e89V.avif'
   }
 ];
 

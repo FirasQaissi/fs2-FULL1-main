@@ -43,7 +43,7 @@ export default function LoadingScreen() {
     >
       <Box
         component="img"
-        src="/src/images/sec (1).gif"
+        src="/images/sec (1).gif"
         alt="Loading..."
         
         sx={{

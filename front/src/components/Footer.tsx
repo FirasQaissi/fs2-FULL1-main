@@ -71,7 +71,7 @@ export default function Footer() {
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Box 
                   component="img" 
-                  src="/src/images/logo5.png" 
+                  src="/images/logo5.png" 
                   alt="SmartGate" 
                   sx={{ height: 40, width: 'auto', mr: 1.5 }} 
                 />
@@ -243,7 +243,7 @@ export default function Footer() {
           }}
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-            <Box component="img" src="/src/images/qaissifiras_qr.png" alt="Smart Gate" sx={{ height: 150, width: 'auto' }} />
+            <Box component="img" src="/images/qaissifiras_qr.png" alt="Smart Gate" sx={{ height: 150, width: 'auto' }} />
             <Typography variant="body2" sx={{ color: '#b0b0b0', fontSize: '0.875rem', textAlign: 'center' }}>
               ❤️ {t('אתר זה נבנה באהבה ע"פ ')} <br />
               © {new Date().getFullYear()} SmartGate. {t('footer.allRightsReserved')}

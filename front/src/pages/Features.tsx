@@ -7,37 +7,37 @@ const features = [
   {
     title: "אבטחה מתקדמת",
     description: "הצפנה ברמה צבאית ואימות ביומטרי להגנה מקסימלית.",
-    image: "/src/images/AllegionShlageOmnia_SatinNickel_Front_DigitsOn_Final_02.png.thumb.1280.1280_394x.webp",
+    image: "/images/AllegionShlageOmnia_SatinNickel_Front_DigitsOn_Final_02.png.thumb.1280.1280_394x.webp",
     icon: "🔒"
   },
   {
     title: "קישוריות חכמה",
     description: "תמיכה ב-WiFi, Bluetooth ו-Zigbee לשילוב חלק עם הבית החכם.",
-    image: "/src/images/Hd43ab953807844cf9cabc6346c167e89V.avif",
+    image: "/images/Hd43ab953807844cf9cabc6346c167e89V.avif",
     icon: "📱"
   },
   {
     title: "שליטה קולית",
     description: "תומך ב-Alexa, Google Assistant ו-Siri להפעלה ללא מגע.",
-    image: "/src/images/images22.jpeg",
+    image: "/images/images22.jpeg",
     icon: "🎤"
   },
   {
     title: "אפליקציה לנייד",
     description: "אפליקציה מקיפה לניטור ושליטה מרחוק מכל מקום.",
-    image: "/src/images/imagesddwe.jpeg",
+    image: "/images/imagesddwe.jpeg",
     icon: "📲"
   },
   {
     title: "נעילה אוטומטית",
     description: "נעילה חכמה שמאבטחת את הדלת אוטומטית כשאתם יוצאים.",
-    image: "/src/images/s-l1200.jpg",
+    image: "/images/s-l1200.jpg",
     icon: "⚡"
   },
   {
     title: "גישה לאורחים",
     description: "קודי גישה זמניים לאורחים עם מגבלות זמן מותאמות.",
-    image: "/src/images/smart_lock_web1.jpg",
+    image: "/images/smart_lock_web1.jpg",
     icon: "👥"
   }
 ];

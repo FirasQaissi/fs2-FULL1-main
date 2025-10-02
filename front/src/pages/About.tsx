@@ -8,25 +8,25 @@ const team = [
   {
     name: "Firas Qaissi",
     role: "מנכ" + "ל ומייסד",
-    image: "/src/images/managerPhotos/person1.jpg",
+    image: "/images/ManagersPhotos/person.jpg",
     description: "מעל 10 שנים בתחום הבית החכם"
   },
   {
     name: "Alaa Khatib",
     role: "סמנכ" + "ל טכנולוגיות",
-    image: "/src/images/managerPhotos/person1.jpg",
+    image: "/images/ManagersPhotos/person.jpg",
     description: "מומחה ל-IoT ומערכות אבטחה"
   },
   {
     name: "Emily Rodriguez",
     role: "ראש תחום עיצוב",
-    image:"/src/images/managerPhotos/person1.jpg",
+    image:"/images/ManagersPhotos/person.jpg",
     description: "מעצבת מוצר זוכת פרסים"
   },
   {
     name: "David Kim",
     role: "מהנדס מוביל",
-    image:"/src/images/managerPhotos/person1.jpg",
+    image:"/images/ManagersPhotos/person.jpg",
     description: "מומחה לחומרת מנעולים חכמים"
   }
 ];
@@ -132,7 +132,7 @@ export default function About() {
               sx={{
                 height: 300,
                 borderRadius: '16px',
-                backgroundImage: 'url(/src/images/Untitled-design-48-1.png)',
+                backgroundImage: 'url(/images/Untitled-design-48-1.png)',
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',

@@ -1,2 +1,3 @@
 {"timestamp":"2025-10-02 14:45:11.000","level":"INFO","userId":"68d858c96050653778bfa590","action":"LOGOUT","message":"User logged out: busniess@gmail.com","email":"busniess@gmail.com"}
 {"timestamp":"2025-10-02 14:45:27.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
+{"timestamp":"2025-10-02 14:51:31.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}

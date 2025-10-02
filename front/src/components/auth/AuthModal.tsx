@@ -109,7 +109,7 @@ export default function AuthModal({ open, onClose, initialMode = 'login' }: Auth
           >
             {/* Smart Gate Icon */}
           <Box id="logo1" sx={{ position: 'absolute', top: 8, left: 20, display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box component="img" src="/src/images/logo5.png" alt="Smart Gate" sx={{ height: 28, width: 'auto' }} />
+            <Box component="img" src="/images/logo5.png" alt="Smart Gate" sx={{ height: 28, width: 'auto' }} />
             <Typography variant="h6" sx={{ fontWeight: 200, color: 'black', fontSize: '16px', fontFamily: 'cursive' }}>
               SmartGate
             </Typography>
