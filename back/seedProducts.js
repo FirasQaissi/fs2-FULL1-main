@@ -17,7 +17,7 @@ const sampleProducts = [
     version: "v3.0",
     features: ["Fingerprint Scanner", "Facial Recognition", "Anti-Tamper Alarm", "Backup Key", "Weather Resistant"],
     price: 449.99,
-    image: "/images/productsImages/Hd43ab953807844cf9cabc6346c167e89V.avif"
+    image: "/images/productsImages/imagesddwe-removebg-preview.png"
   },
   {
     name: "Modern Smart Lock Classic",
@@ -25,7 +25,7 @@ const sampleProducts = [
     version: "v1.5",
     features: ["Bluetooth Control", "Keypad Entry", "Battery Backup", "Easy Installation", "LED Indicators"],
     price: 199.99,
-    image: "/images/productsImages/images22.jpeg"
+    image: "/images/productsImages/images22-removebg-preview.png"
   },
   {
     name: "Premium Smart Lock Elite",
@@ -33,7 +33,7 @@ const sampleProducts = [
     version: "v2.5",
     features: ["Zigbee Protocol", "HomeKit Compatible", "Stainless Steel", "Customizable Codes", "Activity Log"],
     price: 399.99,
-    image: "/images/productsImages/imagesddwe.jpeg"
+    image: "/images/productsImages/imagesddwe-removebg-preview.png"
   },
   {
     name: "Compact Smart Lock Mini",
@@ -41,7 +41,7 @@ const sampleProducts = [
     version: "v1.2",
     features: ["Compact Design", "Quick Setup", "Low Power Consumption", "Remote Monitoring", "Durable Build"],
     price: 149.99,
-    image: "/images/productsImages/s-l1200.jpg"
+    image: "/images/productsImages/s-l1200-removebg-preview.png"
   },
   {
     name: "Smart Lock Web Series",
@@ -49,7 +49,7 @@ const sampleProducts = [
     version: "v2.0",
     features: ["Cloud Storage", "Remote Updates", "Multi-User Management", "Geofencing", "Integration Hub"],
     price: 329.99,
-    image: "/images/productsImages/smart_lock_web1.jpg"
+    image: "/images/productsImages/smart_lock_web1-removebg-preview.png"
   },
   {
     name: "Designer Smart Lock Collection",
@@ -57,9 +57,35 @@ const sampleProducts = [
     version: "v1.8",
     features: ["Designer Finish", "Touch Interface", "Silent Operation", "Energy Efficient", "Warranty Included"],
     price: 279.99,
-    image: "/images/productsImages/Untitled-design-48-1.png"
+    image: "/images/productsImages/Untitled-design-48-1-removebg-preview.png"
+  },
+  {
+    name: "Ruveno Slim Smart Lock",
+    descriptions: "Ultra-slim smart lock with fingerprint technology and sleek design for modern homes.",
+    version: "v2.3",
+    features: ["Fingerprint Scanner", "Slim Design", "Bluetooth 5.0", "Long Battery Life", "Easy Installation"],
+    price: 249.99,
+    image: "/images/productsImages/Ruveno-Slim-Smart-Fingerprint-Door-Lock-eeb25cc-removebg-preview.png"
+  },
+  {
+    name: "Smart Lock 64 Series",
+    descriptions: "Advanced smart lock with multiple authentication methods and smart home integration.",
+    version: "v1.9",
+    features: ["Multi-Auth", "Smart Home Integration", "Weather Resistant", "Backup Power", "Mobile App"],
+    price: 189.99,
+    image: "/images/productsImages/64.png"
+  },
+  {
+    name: "Smart Lock 65 Series",
+    descriptions: "Professional-grade smart lock with enterprise features and advanced security protocols.",
+    version: "v2.7",
+    features: ["Enterprise Security", "Audit Trail", "Multi-User Management", "Cloud Sync", "API Integration"],
+    price: 359.99,
+    image: "/images/productsImages/65.png"
   }
 ];
+
+
 
 async function seedProducts() {
   try {

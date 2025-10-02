@@ -5,3 +5,11 @@
 {"timestamp":"2025-10-02 16:16:21.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
 {"timestamp":"2025-10-02 19:19:44.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGOUT","message":"User logged out: admin@gmail.com","email":"admin@gmail.com"}
 {"timestamp":"2025-10-02 19:19:56.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
+{"timestamp":"2025-10-02 19:22:50.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGOUT","message":"User logged out: admin@gmail.com","email":"admin@gmail.com"}
+{"timestamp":"2025-10-02 19:25:46.000","level":"INFO","userId":"68d858c96050653778bfa590","action":"LOGIN","message":"User logged in: busniess@gmail.com","email":"busniess@gmail.com","ip":"::1"}
+{"timestamp":"2025-10-02 19:25:57.000","level":"INFO","userId":"68d858c96050653778bfa590","action":"LOGOUT","message":"User logged out: busniess@gmail.com","email":"busniess@gmail.com"}
+{"timestamp":"2025-10-02 19:26:08.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
+{"timestamp":"2025-10-02 19:26:22.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGOUT","message":"User logged out: admin@gmail.com","email":"admin@gmail.com"}
+{"timestamp":"2025-10-02 19:26:29.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
+{"timestamp":"2025-10-02 19:44:22.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
+{"timestamp":"2025-10-02 20:07:25.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGOUT","message":"User logged out: admin@gmail.com","email":"admin@gmail.com"}

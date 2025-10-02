@@ -68,6 +68,10 @@ async function start() {
     
     // Customer Messages
     app.use('/api/customer-messages', require('./routes/customerMessages'));
+
+    // Seed Products
+    app.use("/images", express.static("public/images"));
+  
     
 
     app.listen(PORT, () => {
