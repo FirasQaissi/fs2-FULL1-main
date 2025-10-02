@@ -1,0 +1,20 @@
+{"timestamp":"2025-10-01 15:05:27.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
+{"timestamp":"2025-10-01 15:44:00.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGOUT","message":"User logged out: admin@gmail.com","email":"admin@gmail.com"}
+{"timestamp":"2025-10-01 15:53:28.000","level":"INFO","userId":"68d858c96050653778bfa590","action":"LOGIN","message":"User logged in: busniess@gmail.com","email":"busniess@gmail.com","ip":"::1"}
+{"timestamp":"2025-10-01 15:53:29.000","level":"INFO","userId":"68d858c96050653778bfa590","action":"LOGIN","message":"User logged in: busniess@gmail.com","email":"busniess@gmail.com","ip":"::1"}
+{"timestamp":"2025-10-01 15:53:38.000","level":"INFO","userId":"68d858c96050653778bfa590","action":"LOGOUT","message":"User logged out: busniess@gmail.com","email":"busniess@gmail.com"}
+{"timestamp":"2025-10-01 15:53:48.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
+{"timestamp":"2025-10-01 16:23:32.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGOUT","message":"User logged out: admin@gmail.com","email":"admin@gmail.com"}
+{"timestamp":"2025-10-01 16:23:50.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
+{"timestamp":"2025-10-01 16:35:08.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGOUT","message":"User logged out: admin@gmail.com","email":"admin@gmail.com"}
+{"timestamp":"2025-10-01 16:35:20.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
+{"timestamp":"2025-10-01 16:46:20.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGOUT","message":"User logged out: admin@gmail.com","email":"admin@gmail.com"}
+{"timestamp":"2025-10-01 16:47:53.000","level":"INFO","userId":"anonymous","action":"CREATED","message":"Customer message: CREATED","messageId":"68dd5b393d0a197766e3dbdb","name":"Firas Qaissi Qaissi","email":"test33@gmail.com","subject":"aa"}
+{"timestamp":"2025-10-01 16:57:14.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
+{"timestamp":"2025-10-01 17:17:32.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGOUT","message":"User logged out: admin@gmail.com","email":"admin@gmail.com"}
+{"timestamp":"2025-10-01 17:25:12.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
+{"timestamp":"2025-10-01 17:40:18.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGOUT","message":"User logged out: admin@gmail.com","email":"admin@gmail.com"}
+{"timestamp":"2025-10-01 21:11:08.000","level":"INFO","userId":"68dd98d53d0a197766e3de84","action":"LOGOUT","message":"User logged out: yousefd@gmail.com","email":"yousefd@gmail.com"}
+{"timestamp":"2025-10-01 21:11:17.000","level":"INFO","userId":"68dd98d53d0a197766e3de84","action":"LOGIN","message":"User logged in: yousefd@gmail.com","email":"yousefd@gmail.com","ip":"::1"}
+{"timestamp":"2025-10-01 21:35:43.000","level":"INFO","userId":"68dd98d53d0a197766e3de84","action":"LOGOUT","message":"User logged out: yousefd@gmail.com","email":"yousefd@gmail.com"}
+{"timestamp":"2025-10-01 21:38:41.000","level":"INFO","userId":"68d858c96050653778bfa590","action":"LOGIN","message":"User logged in: busniess@gmail.com","email":"busniess@gmail.com","ip":"::1"}

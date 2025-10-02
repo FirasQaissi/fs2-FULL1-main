@@ -1,0 +1,12 @@
+{"timestamp":"2025-09-27 22:21:54.000","level":"INFO","userId":"anonymous","action":"CREATED","message":"Customer message: CREATED","messageId":"68d86382c8c16e5b291ae88d","name":"פראס קיסי","email":"test33333333333@gmail.com","subject":"aa"}
+{"timestamp":"2025-09-27 22:22:42.000","level":"INFO","userId":"anonymous","action":"CREATED","message":"Customer message: CREATED","messageId":"68d863b2c8c16e5b291ae88f","name":"hello world last","email":"test2222@gmail.com","subject":"asdqweasd"}
+{"timestamp":"2025-09-27 22:24:11.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
+{"timestamp":"2025-09-27 22:25:51.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
+{"timestamp":"2025-09-27 22:29:01.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
+{"timestamp":"2025-09-27 22:34:49.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGIN","message":"User logged in: admin@gmail.com","email":"admin@gmail.com","ip":"::1"}
+{"timestamp":"2025-09-27 22:36:40.000","level":"INFO","userId":"68c3fd666c27167f971a3599","action":"LOGOUT","message":"User logged out: admin@gmail.com","email":"admin@gmail.com"}
+{"timestamp":"2025-09-27 22:37:24.000","level":"INFO","userId":"68d867193364efdf0d2ac9eb","action":"LOGOUT","message":"User logged out: qaissi0003@gmail.com","email":"qaissi0003@gmail.com"}
+{"timestamp":"2025-09-27 22:37:32.000","level":"INFO","userId":"68d867193364efdf0d2ac9eb","action":"LOGIN","message":"User logged in: qaissi0003@gmail.com","email":"qaissi0003@gmail.com","ip":"::1"}
+{"timestamp":"2025-09-27 22:37:46.000","level":"INFO","userId":"68d867193364efdf0d2ac9eb","action":"LOGOUT","message":"User logged out: qaissi0003@gmail.com","email":"qaissi0003@gmail.com"}
+{"timestamp":"2025-09-27 22:39:35.000","level":"INFO","userId":"68d867193364efdf0d2ac9eb","action":"LOGIN","message":"User logged in: qaissi0003@gmail.com","email":"qaissi0003@gmail.com","ip":"::1"}
+{"timestamp":"2025-09-27 22:39:45.000","level":"INFO","userId":"68d867193364efdf0d2ac9eb","action":"LOGOUT","message":"User logged out: qaissi0003@gmail.com","email":"qaissi0003@gmail.com"}

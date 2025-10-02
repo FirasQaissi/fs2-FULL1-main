@@ -1,0 +1,20 @@
+/* Global font family */
+:root {
+  --app-font-family: "Assistant", "Roboto", sans-serif;
+}
+
+html, body, #root {
+  font-family: var(--app-font-family) !important;
+}
+
+/* Ensure all elements inherit the global font, including pseudo-elements */
+*, *::before, *::after {
+  font-family: inherit !important;
+}
+
+/* Ensure form controls and interactive elements use the global font */
+button, input, select, textarea {
+  font-family: inherit !important;
+}
+
+
