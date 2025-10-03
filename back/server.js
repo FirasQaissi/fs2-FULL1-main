@@ -1,13 +1,63 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 const { connectToDatabase } = require('./config/db');
 const { User } = require('./models');
+const logger = require('./utils/logger');
 
 dotenv.config();
 
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+const leadsUploadsDir = path.join(uploadsDir, 'leads');
+
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+  console.log('Created uploads directory');
+}
+
+if (!fs.existsSync(leadsUploadsDir)) {
+  fs.mkdirSync(leadsUploadsDir, { recursive: true });
+  console.log('Created leads uploads directory');
+}
+
 const app = express();
 app.use(express.json());
+
+// Logging middleware
+app.use((req, res, next) => {
+  const start = Date.now();
+  
+  // Log the request
+  logger.info(`${req.method} ${req.path}`, null, 'HTTP_REQUEST', {
+    method: req.method,
+    path: req.path,
+    ip: req.ip,
+    userAgent: req.get('User-Agent'),
+    timestamp: new Date().toISOString()
+  });
+  
+  // Override res.end to log response
+  const originalEnd = res.end;
+  res.end = function(chunk, encoding) {
+    const duration = Date.now() - start;
+    const statusCode = res.statusCode;
+    
+    logger.info(`Response: ${statusCode}`, null, 'HTTP_RESPONSE', {
+      method: req.method,
+      path: req.path,
+      statusCode,
+      duration: `${duration}ms`,
+      ip: req.ip
+    });
+    
+    originalEnd.call(this, chunk, encoding);
+  };
+  
+  next();
+});
 
 const MONGODB_URI = process.env.MONGODB_URI 
 const PORT = process.env.PORT || 3000;
@@ -86,6 +136,9 @@ app.use(cors({
 
     // Seed Products
     app.use("/images", express.static("public/images"));
+    
+    // Serve uploaded files
+    app.use("/uploads", express.static("uploads"));
   
     
 

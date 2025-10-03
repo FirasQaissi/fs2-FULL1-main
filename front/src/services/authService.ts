@@ -22,8 +22,12 @@ export const authService = {
     });
   },
   async refresh(): Promise<{ token: string }> {
+    const token = localStorage.getItem('token');
     return http<{ token: string }>(`${AUTH_BASE}/refresh`, {
       method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
     });
   },
   async forgotPassword(email: string): Promise<{ success: boolean; message: string }> {

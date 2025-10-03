@@ -107,6 +107,7 @@ export default function Home() {
     }
   };
 
+
 const features = [
   {
     icon: <FaceIcon sx={{ fontSize: 48, color: '#00d4aa' }} />,

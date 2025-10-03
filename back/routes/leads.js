@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const router = express.Router();
 const { Lead } = require('../models');
+const logger = require('../utils/logger');
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -75,6 +76,16 @@ router.post('/', upload.single('doorPhoto'), async (req, res) => {
 
     const saved = await Lead.create(doc);
     console.log('New lead saved:', saved);
+    
+    // Log the lead creation
+    logger.info(`New lead created: ${saved.name}`, null, 'LEAD_CREATED', {
+      leadId: saved._id,
+      name: saved.name,
+      phone: saved.phone,
+      source: saved.source,
+      hasPhoto: !!saved.doorPhotoPath
+    });
+    
     return res.status(201).json({ ok: true, lead: saved });
   } catch (err) {
     console.error('Failed to save lead:', err);

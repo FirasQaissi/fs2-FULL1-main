@@ -27,11 +27,13 @@ import {
   ShoppingCart as ShoppingCartIcon,
   ShoppingBag as ShoppingBagIcon
 } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import AuthModal from '../components/auth/AuthModal';
 import { cartService, type CartItem } from '../services/cartService';
 
 export default function Cart() {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
@@ -95,7 +97,7 @@ export default function Cart() {
             </Typography>
             <Button 
               variant="contained" 
-              href="/products"
+              onClick={() => navigate('/products')}
               size="large"
               sx={{ px: 4, py: 1.5 }}
             >
@@ -240,7 +242,7 @@ export default function Cart() {
                 >
                   Clear Cart
                 </Button>
-                <Button variant="text" href="/products">
+                <Button variant="text" onClick={() => navigate('/products')}>
                   Continue Shopping
                 </Button>
               </Box>
