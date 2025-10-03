@@ -125,8 +125,8 @@ app.use(cors({
     // Seed Products
     app.use("/images", express.static("public/images"));
     
-    // Note: File uploads are now handled by Cloudinary
-    // No need to serve local uploads in production
+    // Serve uploaded files (fallback when Cloudinary is not configured)
+    app.use("/uploads", express.static("uploads"));
   
     
 

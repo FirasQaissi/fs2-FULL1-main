@@ -7,7 +7,9 @@ const LeadSchema = new mongoose.Schema(
     phone: { type: String, required: true, trim: true },
     timestamp: { type: Date, required: true },
     source: { type: String, default: 'website' }, // Track lead source
-    doorPhotoPath: { type: String }, // Path to uploaded door photo
+    doorPhotoPath: { type: String }, // Path to uploaded door photo (local storage)
+    doorPhotoUrl: { type: String }, // Cloudinary URL
+    doorPhotoPublicId: { type: String }, // Cloudinary public ID
     doorPhotoOriginalName: { type: String }, // Original filename
   },
   { collection: 'leads' }

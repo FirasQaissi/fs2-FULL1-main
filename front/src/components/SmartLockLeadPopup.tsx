@@ -111,10 +111,24 @@ export default function SmartLockLeadPopup({ open, onClose }: SmartLockLeadPopup
       formDataToSend.append('doorPhoto', doorPhoto);
       formDataToSend.append('source', 'smart-lock-lead');
 
+      console.log('Sending form data:', {
+        name: formData.name.trim(),
+        phone: formData.phone.trim(),
+        file: doorPhoto ? {
+          name: doorPhoto.name,
+          size: doorPhoto.size,
+          type: doorPhoto.type
+        } : 'No file',
+        source: 'smart-lock-lead'
+      });
+
       const response = await fetch(`${API_BASE}/api/leads`, {
         method: 'POST',
         body: formDataToSend,
       });
+
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
 
       if (response.ok) {
         setSuccess(true);
@@ -126,14 +140,21 @@ export default function SmartLockLeadPopup({ open, onClose }: SmartLockLeadPopup
           fileInputRef.current.value = '';
         }
       } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'שגיאה בשליחת הנתונים');
+        let errorMessage = 'שגיאה בשליחת הנתונים';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorData.message || errorMessage;
+        } catch (parseError) {
+          console.error('Error parsing response:', parseError);
         }
-      } catch {
-        setError('שגיאה בחיבור לשרת. אנא נסה שוב');
-      } finally {
-        setLoading(false);
+        setError(errorMessage);
       }
+    } catch (error) {
+      console.error('Network error:', error);
+      setError('שגיאה בחיבור לשרת. אנא נסה שוב');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClose = () => {
