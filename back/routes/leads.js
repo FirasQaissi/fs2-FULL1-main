@@ -4,12 +4,13 @@ const path = require('path');
 const fs = require('fs');
 const router = express.Router();
 const { Lead } = require('../models');
-const logger = require('../utils/logger');
+const logger = require('../utils/winstonLogger');
+const { uploadImage, deleteImage } = require('../utils/cloudinary');
 
-// Configure multer for file uploads
+// Configure multer for temporary file storage (before Cloudinary upload)
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadDir = path.join(__dirname, '../uploads/leads');
+    const uploadDir = path.join(__dirname, '../uploads/temp');
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -17,7 +18,7 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'lead-' + uniqueSuffix + path.extname(file.originalname));
+    cb(null, 'temp-' + uniqueSuffix + path.extname(file.originalname));
   }
 });
 
@@ -68,31 +69,53 @@ router.post('/', upload.single('doorPhoto'), async (req, res) => {
       doc.email = String(req.body.email).trim().toLowerCase();
     }
 
-    // Add door photo path if uploaded
+    // Handle file upload to Cloudinary if file exists
+    let cloudinaryResult = null;
     if (req.file) {
-      doc.doorPhotoPath = req.file.path;
-      doc.doorPhotoOriginalName = req.file.originalname;
+      try {
+        cloudinaryResult = await uploadImage(req.file, 'smartgate-leads');
+        
+        if (cloudinaryResult.success) {
+          doc.doorPhotoUrl = cloudinaryResult.secure_url;
+          doc.doorPhotoPublicId = cloudinaryResult.public_id;
+          doc.doorPhotoOriginalName = req.file.originalname;
+        } else {
+          console.error('Cloudinary upload failed:', cloudinaryResult.error);
+          return res.status(500).json({ error: 'Failed to upload image' });
+        }
+      } catch (uploadError) {
+        console.error('Image upload error:', uploadError);
+        return res.status(500).json({ error: 'Failed to upload image' });
+      }
     }
 
     const saved = await Lead.create(doc);
     console.log('New lead saved:', saved);
     
     // Log the lead creation
-    logger.info(`New lead created: ${saved.name}`, null, 'LEAD_CREATED', {
-      leadId: saved._id,
-      name: saved.name,
-      phone: saved.phone,
-      source: saved.source,
-      hasPhoto: !!saved.doorPhotoPath
-    });
+    logger.leadCreated(saved._id, saved.name, saved.phone, saved.source, !!saved.doorPhotoUrl);
+    
+    // Clean up temporary file
+    if (req.file && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
     
     return res.status(201).json({ ok: true, lead: saved });
   } catch (err) {
     console.error('Failed to save lead:', err);
     
-    // Clean up uploaded file if lead creation failed
+    // Clean up temporary file if lead creation failed
     if (req.file && fs.existsSync(req.file.path)) {
       fs.unlinkSync(req.file.path);
+    }
+    
+    // Clean up Cloudinary upload if it succeeded but lead creation failed
+    if (cloudinaryResult && cloudinaryResult.success) {
+      try {
+        await deleteImage(cloudinaryResult.public_id);
+      } catch (deleteError) {
+        console.error('Failed to clean up Cloudinary image:', deleteError);
+      }
     }
     
     return res.status(500).json({ error: 'Failed to save lead' });

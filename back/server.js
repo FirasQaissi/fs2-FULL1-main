@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { connectToDatabase } = require('./config/db');
 const { User } = require('./models');
-const logger = require('./utils/logger');
+const logger = require('./utils/winstonLogger');
 
 dotenv.config();
 
@@ -31,13 +31,7 @@ app.use((req, res, next) => {
   const start = Date.now();
   
   // Log the request
-  logger.info(`${req.method} ${req.path}`, null, 'HTTP_REQUEST', {
-    method: req.method,
-    path: req.path,
-    ip: req.ip,
-    userAgent: req.get('User-Agent'),
-    timestamp: new Date().toISOString()
-  });
+  logger.httpRequest(req.method, req.path, req.ip, req.get('User-Agent'));
   
   // Override res.end to log response
   const originalEnd = res.end;
@@ -45,13 +39,7 @@ app.use((req, res, next) => {
     const duration = Date.now() - start;
     const statusCode = res.statusCode;
     
-    logger.info(`Response: ${statusCode}`, null, 'HTTP_RESPONSE', {
-      method: req.method,
-      path: req.path,
-      statusCode,
-      duration: `${duration}ms`,
-      ip: req.ip
-    });
+    logger.httpResponse(req.method, req.path, statusCode, `${duration}ms`, req.ip);
     
     originalEnd.call(this, chunk, encoding);
   };
@@ -137,8 +125,8 @@ app.use(cors({
     // Seed Products
     app.use("/images", express.static("public/images"));
     
-    // Serve uploaded files
-    app.use("/uploads", express.static("uploads"));
+    // Note: File uploads are now handled by Cloudinary
+    // No need to serve local uploads in production
   
     
 

@@ -2,7 +2,7 @@ const { User } = require('../models');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { hashPassword, comparePassword } = require('../utils/hash');
-const logger = require('../utils/logger');
+const logger = require('../utils/winstonLogger');
 const emailService = require('../utils/emailService');
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_jwt_secret_change_me';
 
