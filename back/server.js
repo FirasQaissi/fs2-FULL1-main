@@ -40,10 +40,22 @@ async function start() {
     }
 
     // Middleware
-    app.use(cors({
-      origin: "https://smartgate-kohl.vercel.app",
-      credentials:true
-    }));
+   const allowedOrigins = [
+  "http://localhost:5173", // dev (vite)
+  "https://smartgate-kohl.vercel.app" // production
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
+
 
     // Health
     app.get('/health', (req, res) => {
