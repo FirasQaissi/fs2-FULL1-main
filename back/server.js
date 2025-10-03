@@ -40,7 +40,10 @@ async function start() {
     }
 
     // Middleware
-    app.use(cors());
+    app.use(cors({
+      origin: "https://smartgate-kohl.vercel.app",
+      credentials:true
+    }));
 
     // Health
     app.get('/health', (req, res) => {
