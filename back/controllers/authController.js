@@ -359,11 +359,12 @@ async function googleCallback(req, res) {
               const user = ${JSON.stringify(safeUser)};
               
               if (window.opener) {
+                // Send message to parent window
                 window.opener.postMessage({
                   type: 'OAUTH_SUCCESS',
                   token: token,
                   user: user
-                }, '${frontendUrl}');
+                }, '*');
                 window.close();
               } else {
                 // Fallback: redirect to frontend
@@ -375,7 +376,7 @@ async function googleCallback(req, res) {
                 window.opener.postMessage({
                   type: 'OAUTH_ERROR',
                   error: 'Authentication failed'
-                }, '${frontendUrl}');
+                }, '*');
                 window.close();
               }
             }
