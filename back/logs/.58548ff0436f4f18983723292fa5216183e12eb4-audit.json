@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "C:\\Users\\Firas\\Downloads\\fs2-FULL1-main\\back\\logs\\.58548ff0436f4f18983723292fa5216183e12eb4-audit.json",
+    "files": [
+        {
+            "date": 1759589190232,
+            "name": "C:\\Users\\Firas\\Downloads\\fs2-FULL1-main\\back\\logs\\error-2025-10-04.log",
+            "hash": "62ebf1a2733086fbb113da7747ef1b7b8ebea8053cae3bc494f9e457b412f54b"
+        }
+    ],
+    "hashType": "sha256"
+}
