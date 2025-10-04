@@ -11,6 +11,24 @@ const logger = require('./utils/winstonLogger');
 
 dotenv.config();
 
+// Set fallback environment variables for development only
+if (!process.env.MONGODB_URI) {
+  console.log('MONGODB_URI not set, using fallback for development');
+  process.env.MONGODB_URI = 'mongodb://localhost:27017/smartgate';
+}
+if (!process.env.JWT_SECRET) {
+  console.log('JWT_SECRET not set, using fallback for development');
+  process.env.JWT_SECRET = 'dev_jwt_secret_change_me';
+}
+if (!process.env.SESSION_SECRET) {
+  console.log('SESSION_SECRET not set, using fallback for development');
+  process.env.SESSION_SECRET = 'dev_session_secret_change_me';
+}
+if (!process.env.FRONTEND_URL) {
+  console.log('FRONTEND_URL not set, using fallback for development');
+  process.env.FRONTEND_URL = 'http://localhost:5173';
+}
+
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, 'uploads');
 const leadsUploadsDir = path.join(uploadsDir, 'leads');
