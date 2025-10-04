@@ -207,7 +207,6 @@ export default function LoginForm({ onSuccess }: Props) {
 
       {/* OAuth Buttons */}
       <OAuthButtons
-        onSuccess={onSuccess}
         onError={setError}
       />
 

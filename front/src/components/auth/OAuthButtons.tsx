@@ -2,16 +2,13 @@ import { useState } from 'react';
 import { Box, Button, Stack, Typography, CircularProgress } from '@mui/material';
 import { Google as GoogleIcon } from '@mui/icons-material';
 import { oauthService } from '../../services/oauthService';
-import { authStorage } from '../../services/authStorage';
 import { useSettings } from '../../providers/SettingsProvider';
-import type { User } from '../../types/auth';
 
 interface OAuthButtonsProps {
-  onSuccess?: (user: User) => void;
   onError?: (error: string) => void;
 }
 
-export default function OAuthButtons({ onSuccess, onError }: OAuthButtonsProps) {
+export default function OAuthButtons({ onError }: OAuthButtonsProps) {
   const { t } = useSettings();
   const [loading, setLoading] = useState<'google' | null>(null);
 
