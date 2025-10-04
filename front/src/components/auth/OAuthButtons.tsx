@@ -17,7 +17,7 @@ export default function OAuthButtons({ onError }: OAuthButtonsProps) {
   const handleOAuthClick = async (provider: 'google') => {
     try {
       setLoading(provider);
-      console.log(`🔄 Starting ${provider} OAuth flow...`);
+      console.log(`Starting ${provider} OAuth flow...`);
 
       // For development, use direct redirect
       // For production, you might want to use popup
@@ -26,18 +26,18 @@ export default function OAuthButtons({ onError }: OAuthButtonsProps) {
       }
 
     } catch (error) {
-      console.error(`❌ ${provider} OAuth error:`, error);
+      console.error(`${provider} OAuth error:`, error);
       setLoading(null);
       onError?.(error instanceof Error ? error.message : `${provider} authentication failed`);
     }
   };
 
-  const OAuthButton = ({ 
-    provider, 
-    icon, 
-    label, 
-    color 
-  }: { 
+  const OAuthButton = ({
+    provider,
+    icon,
+    label,
+    color
+  }: {
     provider: 'google';
     icon: React.ReactNode;
     label: string;

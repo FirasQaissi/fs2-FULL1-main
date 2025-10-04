@@ -28,7 +28,7 @@ export default function AuthCallback() {
         authStorage.setToken(token);
         authStorage.setUser(user);
 
-        console.log('✅ OAuth authentication successful:', {
+        console.log('OAuth authentication successful:', {
           userId: user._id,
           email: user.email,
           name: user.name
@@ -40,7 +40,7 @@ export default function AuthCallback() {
         }, 2000);
 
       } catch (err) {
-        console.error('❌ OAuth callback error:', err);
+        console.error('OAuth callback error:', err);
         setError('Failed to process authentication');
       }
     };

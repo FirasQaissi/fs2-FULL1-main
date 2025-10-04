@@ -6,6 +6,12 @@ const logger = require('../utils/winstonLogger');
 const emailService = require('../utils/emailService');
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_jwt_secret_change_me';
 
+// Helper function to get frontend URL based on environment
+function getFrontendUrl() {
+  const isProduction = process.env.NODE_ENV === 'production';
+  return process.env.FRONTEND_URL || (isProduction ? 'https://smartgate-kohl.vercel.app' : 'http://localhost:5173');
+}
+
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_REGEX = /^(?=.*[!@%$#^&*\-_]).{8,}$/;
 const ISRAELI_PHONE_REGEX = /^05[0-9]{8}$/;
@@ -306,6 +312,52 @@ async function resetPassword(req, res) {
   }
 }
 
-module.exports = { login, register, me, logout, verifyPassword, forgotPassword, resetPassword, refresh };
+// OAuth callback handlers
+async function googleCallback(req, res) {
+  try {
+    console.log('Google OAuth callback received');
+
+    if (!req.user) {
+      console.error('No user in Google OAuth callback');
+      return res.status(401).json({ message: 'OAuth authentication failed' });
+    }
+
+    const user = req.user;
+    console.log('Google OAuth successful for user:', user._id);
+
+    // Update user login status
+    await User.findByIdAndUpdate(user._id, {
+      lastLogin: new Date(),
+      isOnline: true
+    });
+
+    // Generate JWT token
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '10m' });
+
+    const safeUser = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone || '',
+      isAdmin: !!user.isAdmin,
+      isBusiness: !!user.isBusiness,
+      isUser: user.isUser !== false,
+    };
+
+    // Redirect to frontend with token
+    const frontendUrl = getFrontendUrl();
+    const redirectUrl = `${frontendUrl}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}`;
+
+    console.log('Redirecting to frontend:', redirectUrl);
+    res.redirect(redirectUrl);
+
+  } catch (error) {
+    console.error('Google OAuth callback error:', error);
+    const frontendUrl = getFrontendUrl();
+    res.redirect(`${frontendUrl}/auth/error?message=${encodeURIComponent('OAuth authentication failed')}`);
+  }
+}
+
+module.exports = { login, register, me, logout, verifyPassword, forgotPassword, resetPassword, refresh, googleCallback };
 
 

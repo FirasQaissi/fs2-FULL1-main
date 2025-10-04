@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     phone: { type: String, required: false, trim: true, default: '' },
-    passwordHash: { type: String, required: true },
+    passwordHash: { type: String, required: false }, // Made optional for OAuth users
     enrolledPaths: { type: [EnrolledPathSchema], default: [] },
     isAdmin: { type: Boolean, default: false },
     isBusiness: { type: Boolean, default: false },
@@ -29,6 +29,11 @@ const UserSchema = new mongoose.Schema(
         // Password reset
         resetPasswordToken: { type: String, default: null },
         resetPasswordExpires: { type: Date, default: null },
+        // OAuth providers
+        oauth: {
+          googleId: { type: String, default: null },
+          googleEmail: { type: String, default: null }
+        },
   },
   { timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } }
 );
