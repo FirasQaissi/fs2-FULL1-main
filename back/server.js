@@ -36,6 +36,7 @@ app.use(session({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
+      sameSite: 'none',
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
@@ -43,6 +44,8 @@ app.use(session({
 // Initialize Passport
 app.use(passport.initialize());
 app.use(passport.session());
+app.set('trust proxy', 1);
+
 
 // Logging middleware
 app.use((req, res, next) => {
