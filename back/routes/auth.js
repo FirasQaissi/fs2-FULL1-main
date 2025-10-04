@@ -14,7 +14,7 @@ router.post('/reset-password', resetPassword);
 router.get('/me', authMiddleware, me);
 router.post('/refresh', refresh);
 
-// OAuth routes
+/// 2. OAuth routes
 // Google OAuth - only if credentials are configured
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   router.get('/google',

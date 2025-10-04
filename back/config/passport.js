@@ -17,7 +17,7 @@ console.log('OAuth Configuration:', {
   frontendUrl: FRONTEND_URL
 });
 
-// Google OAuth Strategy - only initialize if credentials are provided
+//1. Google OAuth Strategy - only initialize if credentials are provided
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   console.log('Google OAuth credentials found, initializing strategy...');
   passport.use(new GoogleStrategy({

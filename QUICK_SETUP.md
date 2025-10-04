@@ -7,7 +7,9 @@ All hardcoded secrets have been removed. Your code now uses environment variable
 ## 🔧 **To Make OAuth Work:**
 
 ### **Local Development:**
+
 1. Create `.env` file in `back/` folder:
+
 ```bash
 MONGODB_URI=mongodb+srv://qaissi0003_db_user:fAZK4UDluoT5RjFp@Cluster3.8pag1fi.mongodb.net/myapp
 GOOGLE_CLIENT_ID=your_google_client_id
@@ -17,7 +19,9 @@ SESSION_SECRET=your_session_secret
 ```
 
 ### **Production (Render):**
+
 Set these environment variables in your Render dashboard:
+
 ```bash
 MONGODB_URI=mongodb+srv://qaissi0003_db_user:fAZK4UDluoT5RjFp@Cluster3.8pag1fi.mongodb.net/myapp
 GOOGLE_CLIENT_ID=your_google_client_id

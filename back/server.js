@@ -28,7 +28,7 @@ if (!fs.existsSync(leadsUploadsDir)) {
 const app = express();
 app.use(express.json());
 
-// Session configuration for OAuth
+/// Session configuration for OAuth
 app.use(session({
   secret: process.env.SESSION_SECRET || 'dev_session_secret_change_me',
   resave: false,
