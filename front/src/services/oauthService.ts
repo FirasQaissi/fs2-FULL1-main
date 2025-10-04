@@ -71,23 +71,42 @@ export const oauthService = {
       // Check if popup was closed manually
       const checkClosed = setInterval(() => {
         if (popup.closed) {
-          console.log('Popup closed by user');
+          console.log('Popup closed');
           clearInterval(checkClosed);
           window.removeEventListener('message', messageHandler);
           resolve({ success: false, error: 'Authentication cancelled' });
         }
       }, 1000);
 
-      // Timeout after 5 minutes
+      // Check if popup is showing Render loading screen
+      const checkLoading = setInterval(() => {
+        try {
+          if (popup.closed) {
+            clearInterval(checkLoading);
+            return;
+          }
+          
+          // Check if popup URL contains the callback
+          if (popup.location.href.includes('/api/auth/google/callback')) {
+            console.log('OAuth callback detected, waiting for completion...');
+            clearInterval(checkLoading);
+          }
+        } catch (e) {
+          // Cross-origin access blocked, which is normal
+        }
+      }, 500);
+
+      // Timeout after 2 minutes (reduced from 5 minutes)
       setTimeout(() => {
         if (!popup.closed) {
           console.log('OAuth timeout');
           popup.close();
           clearInterval(checkClosed);
+          clearInterval(checkLoading);
           window.removeEventListener('message', messageHandler);
           resolve({ success: false, error: 'Authentication timeout' });
         }
-      }, 300000); // 5 minutes
+      }, 120000); // 2 minutes
     });
   }
 };
