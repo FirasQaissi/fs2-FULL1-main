@@ -45,10 +45,7 @@ export const oauthService = {
       const messageHandler = (event: MessageEvent) => {
         console.log('Received message from popup:', event.data);
 
-        if (event.origin !== window.location.origin) {
-          return;
-        }
-
+        // Accept messages from any origin for OAuth popup communication
         if (event.data.type === 'OAUTH_SUCCESS') {
           console.log('OAuth success received:', event.data);
           popup.close();
