@@ -15,6 +15,8 @@ import Business from "../pages/Business";
 import Contact from "../pages/Contact";
 import ComingSoon from "../pages/ComingSoon";
 import ResetPassword from "../pages/ResetPassword";
+import AuthCallback from "../pages/AuthCallback";
+import AuthError from "../pages/AuthError";
 
 import { Routes } from "react-router-dom";
 
@@ -52,6 +54,9 @@ export default function Default() {
         <Route path="/warranty" element={<ComingSoon />} />
         <Route path="/returns" element={<ComingSoon />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        {/* OAuth callback routes */}
+        <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/auth/error" element={<AuthError />} />
         {/* Catch-all route for 404s */}
         <Route path="*" element={<Home />} />
       </Routes>

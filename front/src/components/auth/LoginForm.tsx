@@ -3,6 +3,7 @@ import { Alert, Box, Button, Checkbox, FormControlLabel, Stack, TextField } from
 import { authService } from '../../services/authService';
 import { authStorage } from '../../services/authStorage';
 import ForgotPasswordForm from './ForgotPasswordForm';
+import OAuthButtons from './OAuthButtons';
 import type { LoginRequest, User } from '../../types/auth';
 
 type Props = {
@@ -203,6 +204,12 @@ export default function LoginForm({ onSuccess }: Props) {
           </Button>
         </Box>
       </Stack>
+
+      {/* OAuth Buttons */}
+      <OAuthButtons
+        onSuccess={onSuccess}
+        onError={setError}
+      />
 
       <ForgotPasswordForm
         open={forgotPasswordOpen}
