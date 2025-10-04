@@ -52,6 +52,8 @@ export default function Default() {
         <Route path="/warranty" element={<ComingSoon />} />
         <Route path="/returns" element={<ComingSoon />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        {/* Catch-all route for 404s */}
+        <Route path="*" element={<Home />} />
       </Routes>
     )
 }
