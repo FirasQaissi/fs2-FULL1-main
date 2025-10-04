@@ -12,13 +12,13 @@ export default function OAuthButtons({ onError }: OAuthButtonsProps) {
   const { t } = useSettings();
   const [loading, setLoading] = useState<'google' | null>(null);
 
-  const handleOAuthClick = (provider: 'google') => {
+  const handleOAuthClick = async (provider: 'google') => {
     try {
       setLoading(provider);
       console.log(`Starting ${provider} OAuth flow...`);
 
       // Use direct redirect instead of popup
-      oauthService.initiateGoogleAuth();
+      await oauthService.initiateGoogleAuth();
 
     } catch (error) {
       console.error(`${provider} OAuth error:`, error);

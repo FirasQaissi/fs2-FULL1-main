@@ -344,12 +344,37 @@ async function googleCallback(req, res) {
       isUser: user.isUser !== false,
     };
 
-    // Redirect to frontend with token (direct redirect approach)
+    // Send immediate redirect HTML to bypass Render loading screen
     const frontendUrl = getFrontendUrl();
     const redirectUrl = `${frontendUrl}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}`;
 
     console.log('Redirecting to frontend:', redirectUrl);
-    res.redirect(redirectUrl);
+    
+    // Send HTML that immediately redirects
+    const redirectHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Redirecting...</title>
+          <meta http-equiv="refresh" content="0;url=${redirectUrl}">
+          <script>
+            // Immediate redirect
+            window.location.href = '${redirectUrl}';
+          </script>
+        </head>
+        <body>
+          <p>Redirecting to your application...</p>
+          <script>
+            // Fallback redirect after 1 second
+            setTimeout(() => {
+              window.location.href = '${redirectUrl}';
+            }, 1000);
+          </script>
+        </body>
+      </html>
+    `;
+    
+    res.send(redirectHtml);
 
   } catch (error) {
     console.error('Google OAuth callback error:', error);

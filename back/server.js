@@ -152,6 +152,15 @@ app.use(cors({
       });
     });
 
+    // Wake up endpoint to prevent cold start during OAuth
+    app.get('/wake', (req, res) => {
+      res.json({ 
+        status: 'awake', 
+        timestamp: new Date().toISOString(),
+        message: 'Server is ready for OAuth'
+      });
+    });
+
     // Auth
     app.use('/api/auth', authRoutes);
     

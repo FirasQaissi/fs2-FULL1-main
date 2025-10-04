@@ -16,8 +16,19 @@ export const oauthService = {
   /**
    * Initiate Google OAuth flow
    */
-  initiateGoogleAuth(): void {
+  async initiateGoogleAuth(): Promise<void> {
     console.log('Initiating Google OAuth...');
+    
+    try {
+      // Wake up the server to prevent cold start
+      console.log('Waking up server...');
+      await fetch(`${API_BASE.replace('/api', '')}/wake`);
+      console.log('Server is awake');
+    } catch (error) {
+      console.log('Server wake up failed, proceeding anyway:', error);
+    }
+    
+    // Proceed with OAuth
     const googleAuthUrl = `${OAUTH_BASE}/google`;
     console.log('Google OAuth URL:', googleAuthUrl);
     window.location.href = googleAuthUrl;
