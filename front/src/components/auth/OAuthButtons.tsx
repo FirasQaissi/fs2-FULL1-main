@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Box, Button, Stack, Typography, CircularProgress } from '@mui/material';
 import { Google as GoogleIcon } from '@mui/icons-material';
 import { oauthService } from '../../services/oauthService';
+import { authStorage } from '../../services/authStorage';
 import { useSettings } from '../../providers/SettingsProvider';
 import type { User } from '../../types/auth';
 
@@ -10,7 +11,7 @@ interface OAuthButtonsProps {
   onError?: (error: string) => void;
 }
 
-export default function OAuthButtons({ onError }: OAuthButtonsProps) {
+export default function OAuthButtons({ onSuccess, onError }: OAuthButtonsProps) {
   const { t } = useSettings();
   const [loading, setLoading] = useState<'google' | null>(null);
 
@@ -19,16 +20,29 @@ export default function OAuthButtons({ onError }: OAuthButtonsProps) {
       setLoading(provider);
       console.log(`Starting ${provider} OAuth flow...`);
 
-      // For development, use direct redirect
-      // For production, you might want to use popup
-      if (provider === 'google') {
-        oauthService.initiateGoogleAuth();
+      const result = await oauthService.initiateGoogleAuth();
+      
+      if (result.success && result.user && result.token) {
+        // Store authentication data
+        authStorage.setToken(result.token);
+        authStorage.setUser(result.user as User);
+        
+        console.log('OAuth authentication successful:', {
+          userId: (result.user as User)._id,
+          email: (result.user as User).email,
+          name: (result.user as User).name
+        });
+        
+        onSuccess?.(result.user as User);
+      } else {
+        throw new Error(result.error || 'Authentication failed');
       }
 
     } catch (error) {
       console.error(`${provider} OAuth error:`, error);
-      setLoading(null);
       onError?.(error instanceof Error ? error.message : `${provider} authentication failed`);
+    } finally {
+      setLoading(null);
     }
   };
 
