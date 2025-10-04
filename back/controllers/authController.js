@@ -344,12 +344,49 @@ async function googleCallback(req, res) {
       isUser: user.isUser !== false,
     };
 
-    // Redirect to frontend with token
+    // Send success message to parent window (for popup OAuth)
     const frontendUrl = getFrontendUrl();
-    const redirectUrl = `${frontendUrl}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}`;
+    const successHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Authentication Success</title>
+        </head>
+        <body>
+          <script>
+            try {
+              const token = '${token}';
+              const user = ${JSON.stringify(safeUser)};
+              
+              if (window.opener) {
+                window.opener.postMessage({
+                  type: 'OAUTH_SUCCESS',
+                  token: token,
+                  user: user
+                }, '${frontendUrl}');
+                window.close();
+              } else {
+                // Fallback: redirect to frontend
+                window.location.href = '${frontendUrl}/auth/callback?token=' + encodeURIComponent(token) + '&user=' + encodeURIComponent(JSON.stringify(user));
+              }
+            } catch (error) {
+              console.error('OAuth callback error:', error);
+              if (window.opener) {
+                window.opener.postMessage({
+                  type: 'OAUTH_ERROR',
+                  error: 'Authentication failed'
+                }, '${frontendUrl}');
+                window.close();
+              }
+            }
+          </script>
+          <p>Authentication successful! You can close this window.</p>
+        </body>
+      </html>
+    `;
 
-    console.log('Redirecting to frontend:', redirectUrl);
-    res.redirect(redirectUrl);
+    console.log('Sending OAuth success to parent window');
+    res.send(successHtml);
 
   } catch (error) {
     console.error('Google OAuth callback error:', error);
