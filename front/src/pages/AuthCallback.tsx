@@ -34,10 +34,8 @@ export default function AuthCallback() {
           name: user.name
         });
 
-        // Redirect to dashboard or home
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 2000);
+        // Redirect to dashboard or home immediately
+        navigate('/dashboard');
 
       } catch (err) {
         console.error('OAuth callback error:', err);

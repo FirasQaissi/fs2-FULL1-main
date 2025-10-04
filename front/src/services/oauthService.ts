@@ -16,9 +16,11 @@ export const oauthService = {
   /**
    * Initiate Google OAuth flow
    */
-  initiateGoogleAuth(): Promise<{ success: boolean; user?: unknown; token?: string; error?: string }> {
+  initiateGoogleAuth(): void {
     console.log('Initiating Google OAuth...');
-    return this.openOAuthPopup('google');
+    const googleAuthUrl = `${OAUTH_BASE}/google`;
+    console.log('Google OAuth URL:', googleAuthUrl);
+    window.location.href = googleAuthUrl;
   },
 
   /**

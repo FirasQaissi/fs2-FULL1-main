@@ -15,34 +15,18 @@ export default function OAuthButtons({ onSuccess, onError }: OAuthButtonsProps) 
   const { t } = useSettings();
   const [loading, setLoading] = useState<'google' | null>(null);
 
-  const handleOAuthClick = async (provider: 'google') => {
+  const handleOAuthClick = (provider: 'google') => {
     try {
       setLoading(provider);
       console.log(`Starting ${provider} OAuth flow...`);
 
-      const result = await oauthService.initiateGoogleAuth();
-      
-      if (result.success && result.user && result.token) {
-        // Store authentication data
-        authStorage.setToken(result.token);
-        authStorage.setUser(result.user as User);
-        
-        console.log('OAuth authentication successful:', {
-          userId: (result.user as User)._id,
-          email: (result.user as User).email,
-          name: (result.user as User).name
-        });
-        
-        onSuccess?.(result.user as User);
-      } else {
-        throw new Error(result.error || 'Authentication failed');
-      }
+      // Use direct redirect instead of popup
+      oauthService.initiateGoogleAuth();
 
     } catch (error) {
       console.error(`${provider} OAuth error:`, error);
-      onError?.(error instanceof Error ? error.message : `${provider} authentication failed`);
-    } finally {
       setLoading(null);
+      onError?.(error instanceof Error ? error.message : `${provider} authentication failed`);
     }
   };
 
