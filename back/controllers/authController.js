@@ -351,37 +351,93 @@ async function googleCallback(req, res) {
       <html>
         <head>
           <title>Authentication Success</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              min-height: 100vh;
+              margin: 0;
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              color: white;
+            }
+            .container {
+              text-align: center;
+              padding: 2rem;
+              background: rgba(255, 255, 255, 0.1);
+              border-radius: 10px;
+              backdrop-filter: blur(10px);
+            }
+            .spinner {
+              border: 3px solid rgba(255, 255, 255, 0.3);
+              border-radius: 50%;
+              border-top: 3px solid white;
+              width: 40px;
+              height: 40px;
+              animation: spin 1s linear infinite;
+              margin: 0 auto 1rem;
+            }
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+            .message {
+              font-size: 1.2rem;
+              margin-bottom: 1rem;
+            }
+            .submessage {
+              font-size: 0.9rem;
+              opacity: 0.8;
+            }
+          </style>
         </head>
         <body>
+          <div class="container">
+            <div class="spinner"></div>
+            <div class="message">Signing you in...</div>
+            <div class="submessage">Please wait while we complete your authentication.</div>
+          </div>
           <script>
-            try {
-              const token = '${token}';
-              const user = ${JSON.stringify(safeUser)};
-              
-              if (window.opener) {
-                // Send message to parent window
-                window.opener.postMessage({
-                  type: 'OAUTH_SUCCESS',
-                  token: token,
-                  user: user
-                }, '*');
-                window.close();
-              } else {
-                // Fallback: redirect to frontend
+            // Store the authentication data
+            const token = '${token}';
+            const user = ${JSON.stringify(safeUser)};
+            
+            // Function to send success message
+            function sendSuccessMessage() {
+              try {
+                if (window.opener && !window.opener.closed) {
+                  window.opener.postMessage({
+                    type: 'OAUTH_SUCCESS',
+                    token: token,
+                    user: user
+                  }, '*');
+                  window.close();
+                } else {
+                  // Fallback: redirect to frontend
+                  window.location.href = '${frontendUrl}/auth/callback?token=' + encodeURIComponent(token) + '&user=' + encodeURIComponent(JSON.stringify(user));
+                }
+              } catch (error) {
+                console.error('OAuth callback error:', error);
+                // Try fallback redirect
                 window.location.href = '${frontendUrl}/auth/callback?token=' + encodeURIComponent(token) + '&user=' + encodeURIComponent(JSON.stringify(user));
               }
-            } catch (error) {
-              console.error('OAuth callback error:', error);
-              if (window.opener) {
-                window.opener.postMessage({
-                  type: 'OAUTH_ERROR',
-                  error: 'Authentication failed'
-                }, '*');
-                window.close();
-              }
             }
+            
+            // Try to send message immediately
+            sendSuccessMessage();
+            
+            // Also try after a short delay in case the parent window needs time
+            setTimeout(sendSuccessMessage, 1000);
+            
+            // Final fallback after 3 seconds
+            setTimeout(() => {
+              if (!window.closed) {
+                window.location.href = '${frontendUrl}/auth/callback?token=' + encodeURIComponent(token) + '&user=' + encodeURIComponent(JSON.stringify(user));
+              }
+            }, 3000);
           </script>
-          <p>Authentication successful! You can close this window.</p>
         </body>
       </html>
     `;
@@ -397,5 +453,6 @@ async function googleCallback(req, res) {
 }
 
 module.exports = { login, register, me, logout, verifyPassword, forgotPassword, resetPassword, refresh, googleCallback };
+
 
 

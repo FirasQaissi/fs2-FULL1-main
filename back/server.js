@@ -134,10 +134,22 @@ app.use(cors({
 }));
 
 
-    // Health
+    // Health check - simple endpoint for Render cold start
     app.get('/health', (req, res) => {
-      res.json({ ok: 'Success connecting to mongoDB' });
+      res.json({ 
+        status: 'ok', 
+        timestamp: new Date().toISOString(),
+        message: 'Server is running'
+      });
       console.log('Health check successful');
+    });
+
+    // Simple ping endpoint for OAuth callback readiness
+    app.get('/ping', (req, res) => {
+      res.json({ 
+        status: 'ready', 
+        timestamp: new Date().toISOString()
+      });
     });
 
     // Auth
