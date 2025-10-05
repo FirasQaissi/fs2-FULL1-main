@@ -321,7 +321,7 @@ async function googleCallback(req, res) {
 
     if (!req.user) {
       console.error('No user in Google OAuth callback');
-      return res.status(401).json({ message: 'OAuth authentication failed' });
+      return res.status(401).send('<script>window.opener.postMessage({ type: "OAUTH_ERROR", error: "Authentication failed" }, "*"); window.close();</script>');
     }
 
     const user = req.user;
@@ -329,11 +329,10 @@ async function googleCallback(req, res) {
 
     await User.findByIdAndUpdate(user._id, {
       lastLogin: new Date(),
-      isOnline: true,
+      isOnline: true
     });
 
-    // Generate JWT token (valid for 1 day)
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '10m' });
 
     const safeUser = {
       _id: user._id,
@@ -345,35 +344,31 @@ async function googleCallback(req, res) {
       isUser: user.isUser !== false,
     };
 
-    const redirectUrl = `${FRONTEND_URL}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}`;
-
-    console.log('Redirecting to frontend:', redirectUrl);
-
-    const redirectHtml = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Redirecting...</title>
-          <meta http-equiv="refresh" content="0;url=${redirectUrl}">
-          <script>window.location.href = '${redirectUrl}';</script>
-        </head>
-        <body>
-          <p>Redirecting to your application...</p>
-          <script>
-            setTimeout(() => {
-              window.location.href = '${redirectUrl}';
-            }, 1000);
-          </script>
-        </body>
-      </html>
+    // שליחה ל־frontend דרך window.opener.postMessage
+    const script = `
+      <script>
+        if (window.opener) {
+          window.opener.postMessage({
+            type: 'OAUTH_SUCCESS',
+            token: '${token}',
+            user: ${JSON.stringify(safeUser)}
+          }, '*');
+          window.close();
+        } else {
+          // fallback אם לא popup
+          window.location.href = '${getFrontendUrl()}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}';
+        }
+      </script>
     `;
 
-    res.status(200).send(redirectHtml);
+    res.send(script);
+
   } catch (error) {
     console.error('Google OAuth callback error:', error);
-    res.redirect(`${FRONTEND_URL}/auth/error?message=${encodeURIComponent('OAuth authentication failed')}`);
+    res.send(`<script>window.opener.postMessage({ type: "OAUTH_ERROR", error: "OAuth failed" }, "*"); window.close();</script>`);
   }
 }
+
 
 module.exports = {
   login,
