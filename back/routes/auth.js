@@ -32,6 +32,21 @@ router.get('/error', (req, res) => {
   `);
 });
 
+// OAuth configuration test endpoint
+router.get('/config', (req, res) => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  const backendUrl = process.env.BACKEND_URL || (isProduction ? 'https://smartgate-backend.onrender.com' : 'http://localhost:3000');
+  const callbackUrl = process.env.GOOGLE_CALLBACK_URL || `${backendUrl}/api/auth/google/callback`;
+  
+  res.json({
+    environment: process.env.NODE_ENV || 'development',
+    backendUrl,
+    callbackUrl,
+    hasGoogleCredentials: !!(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET),
+    frontendUrl: process.env.FRONTEND_URL || (isProduction ? 'https://smartgate-kohl.vercel.app' : 'http://localhost:5173')
+  });
+});
+
 /// 2. OAuth routes
 // Google OAuth - only if credentials are configured
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
