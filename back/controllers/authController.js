@@ -5,6 +5,8 @@ const { hashPassword, comparePassword } = require('../utils/hash');
 const logger = require('../utils/winstonLogger');
 const emailService = require('../utils/emailService');
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_jwt_secret_change_me';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+
 
 // Helper function to get frontend URL based on environment
 function getFrontendUrl() {
@@ -325,14 +327,13 @@ async function googleCallback(req, res) {
     const user = req.user;
     console.log('Google OAuth successful for user:', user._id);
 
-    // Update user login status
     await User.findByIdAndUpdate(user._id, {
       lastLogin: new Date(),
-      isOnline: true
+      isOnline: true,
     });
 
-    // Generate JWT token
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '10m' });
+    // Generate JWT token (valid for 1 day)
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1d' });
 
     const safeUser = {
       _id: user._id,
@@ -344,28 +345,21 @@ async function googleCallback(req, res) {
       isUser: user.isUser !== false,
     };
 
-    // Send immediate redirect HTML to bypass Render loading screen
-    const frontendUrl = getFrontendUrl();
-    const redirectUrl = `${frontendUrl}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}`;
+    const redirectUrl = `${FRONTEND_URL}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}`;
 
     console.log('Redirecting to frontend:', redirectUrl);
-    
-    // Send HTML that immediately redirects
+
     const redirectHtml = `
       <!DOCTYPE html>
       <html>
         <head>
           <title>Redirecting...</title>
           <meta http-equiv="refresh" content="0;url=${redirectUrl}">
-          <script>
-            // Immediate redirect
-            window.location.href = '${redirectUrl}';
-          </script>
+          <script>window.location.href = '${redirectUrl}';</script>
         </head>
         <body>
           <p>Redirecting to your application...</p>
           <script>
-            // Fallback redirect after 1 second
             setTimeout(() => {
               window.location.href = '${redirectUrl}';
             }, 1000);
@@ -373,17 +367,23 @@ async function googleCallback(req, res) {
         </body>
       </html>
     `;
-    
-    res.send(redirectHtml);
 
+    res.status(200).send(redirectHtml);
   } catch (error) {
     console.error('Google OAuth callback error:', error);
-    const frontendUrl = getFrontendUrl();
-    res.redirect(`${frontendUrl}/auth/error?message=${encodeURIComponent('OAuth authentication failed')}`);
+    res.redirect(`${FRONTEND_URL}/auth/error?message=${encodeURIComponent('OAuth authentication failed')}`);
   }
 }
 
-module.exports = { login, register, me, logout, verifyPassword, forgotPassword, resetPassword, refresh, googleCallback };
-
-
+module.exports = {
+  login,
+  register,
+  me,
+  logout,
+  verifyPassword,
+  forgotPassword,
+  resetPassword,
+  refresh,
+  googleCallback,
+};
 

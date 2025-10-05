@@ -8,8 +8,58 @@ const path = require('path');
 const { connectToDatabase } = require('./config/db');
 const { User } = require('./models');
 const logger = require('./utils/winstonLogger');
+const MongoStore = require('connect-mongo');
 
 dotenv.config();
+
+
+const app = express();
+
+app.set('trust proxy', 1)
+
+   // Middleware
+   const allowedOrigins = [
+  "http://localhost:5173", // dev (vite)
+  "https://smartgate-kohl.vercel.app" // production
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
+
+/// Session configuration for OAuth
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'dev_session_secret_change_me',
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      collectionName: 'sessions',
+    }),
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 ימים
+    },
+  })
+);
+
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+app.use(express.json());
 
 // Set fallback environment variables for development only
 if (!process.env.MONGODB_URI) {
@@ -43,26 +93,6 @@ if (!fs.existsSync(leadsUploadsDir)) {
   console.log('Created leads uploads directory');
 }
 
-const app = express();
-app.use(express.json());
-
-/// Session configuration for OAuth
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'dev_session_secret_change_me',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-      sameSite: 'none',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }
-}));
-
-// Initialize Passport
-app.use(passport.initialize());
-app.use(passport.session());
-app.set('trust proxy', 1);
 
 
 // Logging middleware
@@ -116,22 +146,7 @@ async function start() {
       console.error('Role and phone backfill failed', e);
     }
 
-    // Middleware
-   const allowedOrigins = [
-  "http://localhost:5173", // dev (vite)
-  "https://smartgate-kohl.vercel.app" // production
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true
-}));
+ 
 
 
     // Health check - simple endpoint for Render cold start

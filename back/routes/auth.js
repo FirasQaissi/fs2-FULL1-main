@@ -20,14 +20,14 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   router.get('/google',
     passport.authenticate('google', {
       scope: ['profile', 'email'],
-      session: false
+      session: true
     })
   );
 
   router.get('/google/callback',
     passport.authenticate('google', {
       failureRedirect: '/auth/error',
-      session: false
+      session: true
     }),
     googleCallback
   );
