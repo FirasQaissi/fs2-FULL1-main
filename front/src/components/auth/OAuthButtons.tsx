@@ -78,18 +78,18 @@ export default function OAuthButtons({ onError }: OAuthButtonsProps) {
   return (
     <Box sx={{ mt: 3 }}>
       <Typography variant="body2" sx={{ textAlign: 'center', mb: 2, color: '#6b7280' }}>
-        {t('auth.orContinueWith') || 'Or continue with'}
+        {t('') || ''}
       </Typography>
       <Stack spacing={2}>
         <OAuthButton
           provider="google"
           icon={<GoogleIcon />}
-          label={t('auth.continueWithGoogle') || 'Continue with Google'}
+          label={t('') || 'Continue with Google'}
           color="#4285F4"
         />
       </Stack>
       <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 2, color: '#9e9e9e' }}>
-        {t('auth.oauthInfo') || "We'll create your account if you don't have one"}
+        {t('') || "We'll create your account if you don't have one"}
       </Typography>
     </Box>
   );
