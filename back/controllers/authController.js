@@ -321,7 +321,20 @@ async function googleCallback(req, res) {
 
     if (!req.user) {
       console.error('No user in Google OAuth callback');
-      return res.status(401).send('<script>window.opener.postMessage({ type: "OAUTH_ERROR", error: "Authentication failed" }, "*"); window.close();</script>');
+      return res.status(401).send(`
+        <html>
+          <body>
+            <script>
+              if (window.opener) {
+                window.opener.postMessage({ type: "OAUTH_ERROR", error: "Authentication failed" }, "*");
+                window.close();
+              } else {
+                window.location.href = '${getFrontendUrl()}/login?error=oauth_failed';
+              }
+            </script>
+          </body>
+        </html>
+      `);
     }
 
     const user = req.user;
@@ -346,26 +359,43 @@ async function googleCallback(req, res) {
 
     // שליחה ל־frontend דרך window.opener.postMessage
     const script = `
-      <script>
-        if (window.opener) {
-          window.opener.postMessage({
-            type: 'OAUTH_SUCCESS',
-            token: '${token}',
-            user: ${JSON.stringify(safeUser)}
-          }, '*');
-          window.close();
-        } else {
-          // fallback אם לא popup
-          window.location.href = '${getFrontendUrl()}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}';
-        }
-      </script>
+      <html>
+        <body>
+          <script>
+            if (window.opener) {
+              window.opener.postMessage({
+                type: 'OAUTH_SUCCESS',
+                token: '${token}',
+                user: ${JSON.stringify(safeUser)}
+              }, '*');
+              window.close();
+            } else {
+              // fallback אם לא popup
+              window.location.href = '${getFrontendUrl()}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}';
+            }
+          </script>
+        </body>
+      </html>
     `;
 
     res.send(script);
 
   } catch (error) {
     console.error('Google OAuth callback error:', error);
-    res.send(`<script>window.opener.postMessage({ type: "OAUTH_ERROR", error: "OAuth failed" }, "*"); window.close();</script>`);
+    res.send(`
+      <html>
+        <body>
+          <script>
+            if (window.opener) {
+              window.opener.postMessage({ type: "OAUTH_ERROR", error: "OAuth failed" }, "*");
+              window.close();
+            } else {
+              window.location.href = '${getFrontendUrl()}/login?error=oauth_failed';
+            }
+          </script>
+        </body>
+      </html>
+    `);
   }
 }
 

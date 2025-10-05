@@ -78,6 +78,12 @@ if (!process.env.FRONTEND_URL) {
   console.log('FRONTEND_URL not set, using fallback for development');
   process.env.FRONTEND_URL = 'http://localhost:5173';
 }
+if (!process.env.GOOGLE_CALLBACK_URL) {
+  const isProduction = process.env.NODE_ENV === 'production';
+  const backendUrl = process.env.BACKEND_URL || (isProduction ? 'https://smartgate-backend.onrender.com' : 'http://localhost:3000');
+  process.env.GOOGLE_CALLBACK_URL = `${backendUrl}/api/auth/google/callback`;
+  console.log('GOOGLE_CALLBACK_URL not set, using fallback:', process.env.GOOGLE_CALLBACK_URL);
+}
 
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, 'uploads');

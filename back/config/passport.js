@@ -20,10 +20,15 @@ console.log('OAuth Configuration:', {
 //1. Google OAuth Strategy - only initialize if credentials are provided
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   console.log('Google OAuth credentials found, initializing strategy...');
+  
+  // Set callback URL with fallback
+  const callbackURL = process.env.GOOGLE_CALLBACK_URL || `${BACKEND_URL}/api/auth/google/callback`;
+  console.log('Google OAuth callback URL:', callbackURL);
+  
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL
+    callbackURL: callbackURL
   }, async (accessToken, refreshToken, profile, done) => {
     try {
       console.log('Google OAuth profile received:', {

@@ -14,6 +14,24 @@ router.post('/reset-password', resetPassword);
 router.get('/me', authMiddleware, me);
 router.post('/refresh', refresh);
 
+// OAuth error handler
+router.get('/error', (req, res) => {
+  res.status(401).send(`
+    <html>
+      <body>
+        <script>
+          if (window.opener) {
+            window.opener.postMessage({ type: "OAUTH_ERROR", error: "Authentication failed" }, "*");
+            window.close();
+          } else {
+            window.location.href = '${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?error=oauth_failed';
+          }
+        </script>
+      </body>
+    </html>
+  `);
+});
+
 /// 2. OAuth routes
 // Google OAuth - only if credentials are configured
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
@@ -26,7 +44,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 
   router.get('/google/callback',
     passport.authenticate('google', {
-      failureRedirect: '/auth/error',
+      failureRedirect: '/api/auth/error',
       session: true
     }),
     googleCallback
