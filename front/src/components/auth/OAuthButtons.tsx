@@ -3,6 +3,8 @@ import { Box, Button, Stack, Typography, CircularProgress } from '@mui/material'
 import { Google as GoogleIcon } from '@mui/icons-material';
 import { oauthService } from '../../services/oauthService';
 import { useSettings } from '../../providers/SettingsProvider';
+import { useNavigate } from 'react-router-dom';
+import { authStorage } from '../../services/authStorage';
 
 interface OAuthButtonsProps {
   onError?: (error: string) => void;
@@ -11,14 +13,25 @@ interface OAuthButtonsProps {
 export default function OAuthButtons({ onError }: OAuthButtonsProps) {
   const { t } = useSettings();
   const [loading, setLoading] = useState<'google' | null>(null);
+  const navigate = useNavigate();
 
   const handleOAuthClick = async (provider: 'google') => {
     try {
       setLoading(provider);
       console.log(`Starting ${provider} OAuth flow...`);
 
-      // Use direct redirect instead of popup
-      await oauthService.initiateGoogleAuth();
+      // Use popup-based OAuth to avoid full-page redirect loops
+      const result = await oauthService.openOAuthPopup(provider);
+
+      if (result.success && result.token && result.user) {
+        authStorage.setToken(result.token as string);
+        authStorage.setUser(result.user as unknown as Record<string, unknown>);
+        setLoading(null);
+        navigate('/dashboard');
+        return;
+      }
+
+      throw new Error(result.error || 'Authentication failed');
 
     } catch (error) {
       console.error(`${provider} OAuth error:`, error);
