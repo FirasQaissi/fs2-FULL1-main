@@ -24,7 +24,7 @@ router.get('/error', (req, res) => {
             window.opener.postMessage({ type: "OAUTH_ERROR", error: "Authentication failed" }, "*");
             window.close();
           } else {
-            window.location.href = '${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?error=oauth_failed';
+            window.location.href = '${process.env.FRONTEND_URL || 'https://smartgate-frontend.vercel.app'}/login?error=oauth_failed';
           }
         </script>
       </body>
@@ -35,7 +35,7 @@ router.get('/error', (req, res) => {
 // OAuth configuration test endpoint
 router.get('/config', (req, res) => {
   const isProduction = process.env.NODE_ENV === 'production';
-  const backendUrl = process.env.BACKEND_URL || (isProduction ? 'https://smartgate-backend.onrender.com' : 'http://localhost:3000');
+  const backendUrl = process.env.BACKEND_URL || (isProduction ? 'https://smartgate-frontend.vercel.app' : 'http://localhost:3000');
   const callbackUrl = process.env.GOOGLE_CALLBACK_URL || `${backendUrl}/api/auth/google/callback`;
   
   res.json({
