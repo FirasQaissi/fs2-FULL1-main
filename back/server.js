@@ -18,21 +18,27 @@ const app = express();
 app.set('trust proxy', 1)
 
    // Middleware
-   const allowedOrigins = [
- "https://smartgate-kohl.vercel.app",
+ const allowedOrigins = [
+  "https://smartgate-kohl.vercel.app",
   "https://smartgate-backend.onrender.com"
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      /\.vercel\.app$/.test(origin) // כל דומיין שמסתיים ב-vercel.app
+    ) {
       callback(null, true);
     } else {
+      console.log("CORS blocked origin:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true
 }));
+
 
 /// Session configuration for OAuth
 app.use(
