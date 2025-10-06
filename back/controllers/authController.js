@@ -11,7 +11,9 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 // Helper function to get frontend URL based on environment
 function getFrontendUrl() {
   const isProduction = process.env.NODE_ENV === 'production';
-  return process.env.FRONTEND_URL || (isProduction ? 'https://smartgate-kohl.vercel.app' : 'http://localhost:5173');
+  return process.env.FRONTEND_URL || (isProduction
+    ? 'https://smartgate-kohl.vercel.app'   // 👈 זה האתר שלך ב־Vercel
+    : 'http://localhost:5173');
 }
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
