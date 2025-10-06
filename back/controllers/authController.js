@@ -5,9 +5,20 @@ const { hashPassword, comparePassword } = require('../utils/hash');
 const logger = require('../utils/winstonLogger');
 const emailService = require('../utils/emailService');
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_jwt_secret_change_me';
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+const frontendUrl = process.env.FRONTEND_URL || 'https://smartgate-kohl.vercel.app';
+const redirectUrl = `${frontendUrl}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}`;
 
 
+
+console.log('Redirecting to frontend:', redirectUrl);
+res.send(`
+  <html>
+    <head>
+      <meta http-equiv="refresh" content="0; url=${redirectUrl}" />
+      <script>window.location.href = "${redirectUrl}"</script>
+    </head>
+  </html>
+`);
 // Helper function to get frontend URL based on environment
 function getFrontendUrl() {
   const isProduction = process.env.NODE_ENV === 'production';

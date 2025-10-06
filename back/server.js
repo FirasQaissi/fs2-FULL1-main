@@ -19,20 +19,16 @@ app.set('trust proxy', 1)
 
    // Middleware
    const allowedOrigins = [
-  "http://localhost:5173", // dev (vite)
-  "https://smartgate-kohl.vercel.app" // production
+ "https://smartgate-kohl.vercel.app",
+  "https://smartgate-backend.onrender.com"
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.log('CORS blocked origin:', origin);
-      callback(null, true); // Temporarily allow all origins for debugging
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true
