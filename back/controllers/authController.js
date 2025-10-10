@@ -5,25 +5,12 @@ const { hashPassword, comparePassword } = require('../utils/hash');
 const logger = require('../utils/winstonLogger');
 const emailService = require('../utils/emailService');
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_jwt_secret_change_me';
-const frontendUrl = process.env.FRONTEND_URL || 'https://smartgate-kohl.vercel.app';
-const redirectUrl = `${frontendUrl}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}`;
 
-
-
-console.log('Redirecting to frontend:', redirectUrl);
-res.send(`
-  <html>
-    <head>
-      <meta http-equiv="refresh" content="0; url=${redirectUrl}" />
-      <script>window.location.href = "${redirectUrl}"</script>
-    </head>
-  </html>
-`);
 // Helper function to get frontend URL based on environment
 function getFrontendUrl() {
   const isProduction = process.env.NODE_ENV === 'production';
   return process.env.FRONTEND_URL || (isProduction
-    ? 'https://smartgate-kohl.vercel.app'   // 👈 זה האתר שלך ב־Vercel
+    ? 'https://smartgate-kohl.vercel.app'
     : 'http://localhost:5173');
 }
 
@@ -327,92 +314,6 @@ async function resetPassword(req, res) {
   }
 }
 
-// OAuth callback handlers
-async function googleCallback(req, res) {
-  try {
-    console.log('Google OAuth callback received');
-
-    if (!req.user) {
-      console.error('No user in Google OAuth callback');
-      return res.status(401).send(`
-        <html>
-          <body>
-            <script>
-              if (window.opener) {
-                window.opener.postMessage({ type: "OAUTH_ERROR", error: "Authentication failed" }, "*");
-                window.close();
-              } else {
-                window.location.href = '${getFrontendUrl()}/login?error=oauth_failed';
-              }
-            </script>
-          </body>
-        </html>
-      `);
-    }
-
-    const user = req.user;
-    console.log('Google OAuth successful for user:', user._id);
-
-    await User.findByIdAndUpdate(user._id, {
-      lastLogin: new Date(),
-      isOnline: true
-    });
-
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '10m' });
-
-    const safeUser = {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      phone: user.phone || '',
-      isAdmin: !!user.isAdmin,
-      isBusiness: !!user.isBusiness,
-      isUser: user.isUser !== false,
-    };
-
-    // שליחה ל־frontend דרך window.opener.postMessage
-    const script = `
-      <html>
-        <body>
-          <script>
-            if (window.opener) {
-              window.opener.postMessage({
-                type: 'OAUTH_SUCCESS',
-                token: '${token}',
-                user: ${JSON.stringify(safeUser)}
-              }, '*');
-              window.close();
-            } else {
-              // fallback אם לא popup
-              window.location.href = '${getFrontendUrl()}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}';
-            }
-          </script>
-        </body>
-      </html>
-    `;
-
-    res.send(script);
-
-  } catch (error) {
-    console.error('Google OAuth callback error:', error);
-    res.send(`
-      <html>
-        <body>
-          <script>
-            if (window.opener) {
-              window.opener.postMessage({ type: "OAUTH_ERROR", error: "OAuth failed" }, "*");
-              window.close();
-            } else {
-              window.location.href = '${getFrontendUrl()}/login?error=oauth_failed';
-            }
-          </script>
-        </body>
-      </html>
-    `);
-  }
-}
-
-
 module.exports = {
   login,
   register,
@@ -422,6 +323,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   refresh,
-  googleCallback,
 };
 

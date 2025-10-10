@@ -73,7 +73,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   router.get('/google',
     passport.authenticate('google', {
       scope: ['profile', 'email'],
-      session: true
+      session: false  // ✅ Use stateless JWT, not sessions
     })
   );
 
@@ -82,26 +82,84 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     '/google/callback',
     passport.authenticate('google', {
       failureRedirect: '/api/auth/error',
-      session: true
+      session: false  // ✅ Use stateless JWT, not sessions
     }),
     async (req, res) => {
       try {
         const user = req.user;
         if (!user) {
-          return res.redirect(`${FRONTEND_URL}/login?error=no_user`);
+          return res.send(`
+            <html>
+              <body>
+                <script>
+                  if (window.opener) {
+                    window.opener.postMessage({ type: "OAUTH_ERROR", error: "Authentication failed" }, "*");
+                    window.close();
+                  } else {
+                    window.location.href = '${FRONTEND_URL}/login?error=no_user';
+                  }
+                </script>
+              </body>
+            </html>
+          `);
         }
 
-        // צור JWT עם תוקף 7 ימים
-        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+        // Update user login status
+        await require('../models').User.findByIdAndUpdate(user._id, {
+          lastLogin: new Date(),
+          isOnline: true
+        });
 
-        // הפנה חזרה לפרונט עם ה-token
-        const redirectUrl = `${FRONTEND_URL}/auth/callback?token=${token}`;
-        console.log('✅ Redirecting user to:', redirectUrl);
+        // ✅ Create JWT with consistent payload (userId, not id)
+        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '10m' });
 
-        return res.redirect(redirectUrl);
+        const safeUser = {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone || '',
+          isAdmin: !!user.isAdmin,
+          isBusiness: !!user.isBusiness,
+          isUser: user.isUser !== false,
+        };
+
+        // ✅ Send to frontend via window.opener.postMessage (for popup flow)
+        console.log('✅ Sending OAuth success to frontend popup');
+        return res.send(`
+          <html>
+            <body>
+              <script>
+                if (window.opener) {
+                  window.opener.postMessage({
+                    type: 'OAUTH_SUCCESS',
+                    token: '${token}',
+                    user: ${JSON.stringify(safeUser)}
+                  }, '*');
+                  window.close();
+                } else {
+                  // Fallback if not opened as popup
+                  window.location.href = '${FRONTEND_URL}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}';
+                }
+              </script>
+            </body>
+          </html>
+        `);
       } catch (error) {
         console.error('❌ Google OAuth callback error:', error);
-        return res.redirect(`${FRONTEND_URL}/login?error=server`);
+        return res.send(`
+          <html>
+            <body>
+              <script>
+                if (window.opener) {
+                  window.opener.postMessage({ type: "OAUTH_ERROR", error: "Server error" }, "*");
+                  window.close();
+                } else {
+                  window.location.href = '${FRONTEND_URL}/login?error=server';
+                }
+              </script>
+            </body>
+          </html>
+        `);
       }
     }
   );

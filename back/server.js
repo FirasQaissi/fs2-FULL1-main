@@ -40,7 +40,10 @@ app.use(cors({
 }));
 
 
-/// Session configuration for OAuth
+/// Session configuration for OAuth (DISABLED - using stateless JWT)
+// Sessions are commented out because we're using JWT tokens for authentication
+// If you need sessions for other features, uncomment this section
+/*
 app.use(
   session({
     secret: process.env.SESSION_SECRET || 'dev_session_secret_change_me',
@@ -58,11 +61,11 @@ app.use(
     },
   })
 );
+*/
 
-
-// Initialize Passport
+// Initialize Passport (without sessions - using stateless JWT)
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());  // ✅ Disabled - using stateless JWT instead
 
 
 app.use(express.json());
