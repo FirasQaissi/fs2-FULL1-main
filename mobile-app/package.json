@@ -1,0 +1,31 @@
+{
+  "name": "mobile-app-wrapper",
+  "version": "1.0.0",
+  "description": "Mobile app wrapper for the web application",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Build complete'",
+    "open:android": "npx cap open android",
+    "open:ios": "npx cap open ios",
+    "sync": "npx cap sync",
+    "add:android": "npx cap add android",
+    "add:ios": "npx cap add ios",
+    "copy": "npx cap copy",
+    "update": "npx cap update"
+  },
+  "keywords": ["capacitor", "mobile", "webview"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.0"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.0",
+    "@capacitor/core": "^6.1.0",
+    "@capacitor/ios": "^6.1.0"
+  }
+}
+
+
+
+

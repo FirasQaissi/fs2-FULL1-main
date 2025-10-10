@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: gap: content:">
+    <title>Mobile App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        #webview-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 9999;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        #loading p {
+            margin-top: 20px;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+    <iframe id="webview-frame" src="about:blank"></iframe>
+    
+    <script type="module">
+        // Configuration - UPDATE THIS WITH YOUR DEPLOYED WEBSITE URL
+        const WEBSITE_URL = 'YOUR_WEBSITE_URL_HERE'; // e.g., 'https://your-app.vercel.app'
+        
+        // Load the website
+        const iframe = document.getElementById('webview-frame');
+        const loading = document.getElementById('loading');
+        
+        iframe.src = WEBSITE_URL;
+        
+        // Hide loading screen when iframe loads
+        iframe.onload = function() {
+            setTimeout(() => {
+                loading.style.display = 'none';
+            }, 500);
+        };
+        
+        // Handle errors
+        iframe.onerror = function() {
+            loading.innerHTML = '<p>Failed to load website. Please check your internet connection.</p>';
+        };
+    </script>
+</body>
+</html>
+
+
+
+

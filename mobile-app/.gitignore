@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+android/app/build/
+android/app/release/
+android/.gradle/
+android/build/
+ios/App/build/
+ios/App/Pods/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Capacitor
+.capacitor/
+
+# Signing keys (NEVER commit these!)
+*.keystore
+*.jks
+*.p12
+*.mobileprovision
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Temporary
+*.tmp
+*.temp
+.temp/
+temp/
+
+
+
+
