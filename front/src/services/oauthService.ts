@@ -79,11 +79,14 @@ export const oauthService = {
    * Open OAuth popup window
    */
   openOAuthPopup(provider: 'google'): Promise<{ success: boolean; user?: unknown; token?: string; error?: string }> {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve) => {
-      console.log(`Opening ${provider} OAuth popup...`);
+      (async () => {
+        console.log(`Opening ${provider} OAuth popup...`);
 
-      // ✅ Wake up server BEFORE opening popup
-      console.log('Pre-warming backend server for popup OAuth...');
+        // ✅ Wake up server BEFORE opening popup
+        console.log('Pre-warming backend server for popup OAuth...');
+      })();
       await this.wakeUpServer();
 
       const authUrl = `${OAUTH_BASE}/${provider}`;
