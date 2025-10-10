@@ -193,6 +193,7 @@ export const oauthService = {
           // Try to close popup (may fail due to COOP, but that's okay)
           try {
             popup.close();
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (e) {
             console.log('Could not close popup (COOP restriction)');
           }
@@ -231,6 +232,7 @@ export const oauthService = {
               resolve({ success: false, error: 'Authentication cancelled' });
             }
           }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
           // COOP error or cross-origin - this is expected, continue checking
           // Don't log this as it's normal behavior
