@@ -20,18 +20,39 @@ export default function OAuthButtons({ onError }: OAuthButtonsProps) {
       setLoading(provider);
       console.log(`Starting ${provider} OAuth flow...`);
 
-      // Use popup-based OAuth to avoid full-page redirect loops
-      const result = await oauthService.openOAuthPopup(provider);
+      // ✅ Try popup first, fall back to full-page redirect
+      try {
+        console.log('Attempting popup OAuth flow...');
+        const result = await oauthService.openOAuthPopup(provider);
 
-      if (result.success && result.token && result.user) {
-        authStorage.setToken(result.token as string);
-        authStorage.setUser(result.user as unknown as Record<string, unknown>);
-        setLoading(null);
-        navigate('/dashboard');
+        if (result.success && result.token && result.user) {
+          authStorage.setToken(result.token as string);
+          authStorage.setUser(result.user as unknown as Record<string, unknown>);
+          setLoading(null);
+          // Redirect to home page (or dashboard if user is admin/business)
+          const user = result.user as { isAdmin?: boolean; isBusiness?: boolean };
+          if (user.isAdmin) {
+            navigate('/admin');
+          } else if (user.isBusiness) {
+            navigate('/business');
+          } else {
+            navigate('/');
+          }
+          return;
+        }
+
+        // If popup failed, try full-page redirect
+        throw new Error(result.error || 'Popup authentication failed');
+
+      } catch (popupError) {
+        console.log('Popup flow failed, falling back to full-page redirect...');
+        console.error('Popup error:', popupError);
+        
+        // Use full-page redirect as fallback
+        await oauthService.initiateGoogleAuth();
+        // initiateGoogleAuth will redirect the page, so we won't reach here
         return;
       }
-
-      throw new Error(result.error || 'Authentication failed');
 
     } catch (error) {
       console.error(`${provider} OAuth error:`, error);

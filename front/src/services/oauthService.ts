@@ -14,23 +14,31 @@ console.log('Frontend OAuth Configuration:', {
 
 export const oauthService = {
   /**
-   * Initiate Google OAuth flow
+   * Initiate Google OAuth flow using full-page redirect (fallback method)
    */
   async initiateGoogleAuth(): Promise<void> {
-    console.log('Initiating Google OAuth...');
+    console.log('🔄 Initiating Google OAuth with full-page redirect...');
     
     try {
       // Wake up the server to prevent cold start
       console.log('Waking up server...');
-      await fetch(`${API_BASE.replace('/api', '')}/wake`);
-      console.log('Server is awake');
+      await fetch(`${API_BASE.replace('/api', '')}/wake`, { 
+        method: 'GET',
+        mode: 'no-cors' 
+      }).catch(() => {
+        // Ignore wake-up errors
+      });
+      console.log('Server wake-up complete');
     } catch (error) {
-      console.log('Server wake up failed, proceeding anyway:', error);
+      console.log('Server wake up skipped:', error);
     }
     
-    // Proceed with OAuth
+    // Small delay to ensure server is ready
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Proceed with OAuth using full-page redirect
     const googleAuthUrl = `${OAUTH_BASE}/google`;
-    console.log('Google OAuth URL:', googleAuthUrl);
+    console.log('Redirecting to:', googleAuthUrl);
     window.location.href = googleAuthUrl;
   },
 
@@ -122,45 +130,72 @@ export const oauthService = {
 
       window.addEventListener('message', messageHandler);
 
-      // Check if popup was closed manually
-      const checkClosed = setInterval(() => {
-        if (popup.closed) {
-          console.log('Popup closed');
-          clearInterval(checkClosed);
-          window.removeEventListener('message', messageHandler);
-          resolve({ success: false, error: 'Authentication cancelled' });
+      // ✅ Use a flag to track if we've received a response
+      let responseReceived = false;
+      const originalMessageHandler = messageHandler;
+      const wrappedMessageHandler = (event: MessageEvent) => {
+        originalMessageHandler(event);
+        // If message was processed, mark as received
+        if (event.data && (event.data.type === 'OAUTH_SUCCESS' || event.data.type === 'OAUTH_ERROR')) {
+          responseReceived = true;
         }
-      }, 1000);
+      };
 
-      // Check if popup is showing Render loading screen
-      const checkLoading = setInterval(() => {
-        try {
-          if (popup.closed) {
-            clearInterval(checkLoading);
-            return;
+      window.removeEventListener('message', messageHandler);
+      window.addEventListener('message', wrappedMessageHandler);
+
+      // ✅ Timeout after 2 minutes - don't check popup.closed (triggers COOP error)
+      const timeoutId = setTimeout(() => {
+        if (!responseReceived) {
+          console.log('⏱️ OAuth timeout - no response received');
+          window.removeEventListener('message', wrappedMessageHandler);
+          
+          // Try to close popup (may fail due to COOP, but that's okay)
+          try {
+            popup.close();
+          } catch (e) {
+            console.log('Could not close popup (COOP restriction)');
           }
           
-          // Check if popup URL contains the callback
-          if (popup.location.href.includes('/api/auth/google/callback')) {
-            console.log('OAuth callback detected, waiting for completion...');
-            clearInterval(checkLoading);
-          }
-        } catch (e) {
-          // Cross-origin access blocked, which is normal
-        }
-      }, 500);
-
-      // Timeout after 2 minutes (reduced from 5 minutes)
-      setTimeout(() => {
-        if (!popup.closed) {
-          console.log('OAuth timeout');
-          popup.close();
-          clearInterval(checkClosed);
-          clearInterval(checkLoading);
-          window.removeEventListener('message', messageHandler);
-          resolve({ success: false, error: 'Authentication timeout' });
+          resolve({ success: false, error: 'Authentication timeout - please try again' });
         }
       }, 120000); // 2 minutes
+
+      // ✅ Periodically check if popup still exists using a safer method
+      let popupCheckCount = 0;
+      const popupCheckInterval = setInterval(() => {
+        popupCheckCount++;
+        
+        // Stop checking after we get a response
+        if (responseReceived) {
+          clearInterval(popupCheckInterval);
+          clearTimeout(timeoutId);
+          return;
+        }
+
+        // After 120 checks (2 minutes at 1 check/second), give up
+        if (popupCheckCount > 120) {
+          clearInterval(popupCheckInterval);
+          return;
+        }
+
+        // Try to check if popup is closed (but catch COOP errors)
+        try {
+          // Try to access popup.location (will throw if cross-origin or closed)
+          if (!popup || popup.closed) {
+            console.log('🚪 Popup was closed by user');
+            clearInterval(popupCheckInterval);
+            clearTimeout(timeoutId);
+            window.removeEventListener('message', wrappedMessageHandler);
+            if (!responseReceived) {
+              resolve({ success: false, error: 'Authentication cancelled' });
+            }
+          }
+        } catch (e) {
+          // COOP error or cross-origin - this is expected, continue checking
+          // Don't log this as it's normal behavior
+        }
+      }, 1000);
     });
   }
 };

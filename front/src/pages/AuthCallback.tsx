@@ -28,14 +28,22 @@ export default function AuthCallback() {
         authStorage.setToken(token);
         authStorage.setUser(user);
 
-        console.log('OAuth authentication successful:', {
+        console.log('✅ OAuth authentication successful:', {
           userId: user._id,
           email: user.email,
-          name: user.name
+          name: user.name,
+          isAdmin: user.isAdmin,
+          isBusiness: user.isBusiness
         });
 
-        // Redirect to dashboard or home immediately
-        navigate('/dashboard');
+        // Redirect based on user role
+        if (user.isAdmin) {
+          navigate('/admin');
+        } else if (user.isBusiness) {
+          navigate('/business');
+        } else {
+          navigate('/');
+        }
 
       } catch (err) {
         console.error('OAuth callback error:', err);
