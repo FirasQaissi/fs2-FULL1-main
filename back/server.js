@@ -17,24 +17,39 @@ const app = express();
 
 app.set('trust proxy', 1)
 
-   // Middleware
- const allowedOrigins = [
+   // Middleware - CORS configuration
+const allowedOrigins = [
   "https://smartgate-kohl.vercel.app",
   "https://smartgate-backend.onrender.com"
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (
-      !origin ||
-      allowedOrigins.includes(origin) ||
-      /\.vercel\.app$/.test(origin) // כל דומיין שמסתיים ב-vercel.app
-    ) {
-      callback(null, true);
-    } else {
-      console.log("CORS blocked origin:", origin);
-      callback(new Error("Not allowed by CORS"));
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) {
+      return callback(null, true);
     }
+
+    // Allow all Vercel deployments (preview, production, git branches)
+    if (/\.vercel\.app$/.test(origin)) {
+      console.log("✅ CORS allowed for Vercel deployment:", origin);
+      return callback(null, true);
+    }
+
+    // Allow explicitly listed origins
+    if (allowedOrigins.includes(origin)) {
+      console.log("✅ CORS allowed for whitelisted origin:", origin);
+      return callback(null, true);
+    }
+
+    // Allow localhost for development
+    if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+      console.log("✅ CORS allowed for localhost:", origin);
+      return callback(null, true);
+    }
+
+    console.log("❌ CORS blocked origin:", origin);
+    callback(new Error("Not allowed by CORS"));
   },
   credentials: true
 }));

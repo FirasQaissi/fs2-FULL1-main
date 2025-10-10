@@ -70,12 +70,21 @@ router.get('/config', (req, res) => {
 ================================ */
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   // 🔹 1. התחלת ההתחברות עם Google
-  router.get('/google',
+  router.get('/google', (req, res, next) => {
+    // ✅ Capture the origin that initiated the OAuth flow
+    const origin = req.get('referer') || req.get('origin') || FRONTEND_URL;
+    
+    // Store it in the session state parameter so we can use it in the callback
+    const state = Buffer.from(JSON.stringify({ origin })).toString('base64');
+    
+    console.log('🔵 OAuth initiated from origin:', origin);
+    
     passport.authenticate('google', {
       scope: ['profile', 'email'],
-      session: false  // ✅ Use stateless JWT, not sessions
-    })
-  );
+      session: false,
+      state: state  // Pass the origin through OAuth flow
+    })(req, res, next);
+  });
 
   // 🔹 2. Callback - כאן מתקבל המשתמש
   router.get(
@@ -86,6 +95,28 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     }),
     async (req, res) => {
       try {
+        // ✅ Extract the origin from the state parameter
+        let frontendOrigin = FRONTEND_URL;
+        try {
+          if (req.query.state) {
+            const decoded = JSON.parse(Buffer.from(req.query.state, 'base64').toString());
+            if (decoded.origin) {
+              frontendOrigin = decoded.origin;
+              // Remove trailing slash if present
+              frontendOrigin = frontendOrigin.replace(/\/$/, '');
+              // Extract just the origin (protocol + domain)
+              if (frontendOrigin.includes('//')) {
+                const url = new URL(frontendOrigin);
+                frontendOrigin = url.origin;
+              }
+            }
+          }
+        } catch (e) {
+          console.log('Could not parse state, using default frontend URL');
+        }
+
+        console.log('🔵 OAuth callback - will message origin:', frontendOrigin);
+
         const user = req.user;
         if (!user) {
           return res.send(`
@@ -93,10 +124,10 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
               <body>
                 <script>
                   if (window.opener) {
-                    window.opener.postMessage({ type: "OAUTH_ERROR", error: "Authentication failed" }, "*");
-                    window.close();
+                    window.opener.postMessage({ type: "OAUTH_ERROR", error: "Authentication failed" }, "${frontendOrigin}");
+                    setTimeout(function() { window.close(); }, 100);
                   } else {
-                    window.location.href = '${FRONTEND_URL}/login?error=no_user';
+                    window.location.href = '${frontendOrigin}/login?error=no_user';
                   }
                 </script>
               </body>
@@ -123,22 +154,38 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
           isUser: user.isUser !== false,
         };
 
-        // ✅ Send to frontend via window.opener.postMessage (for popup flow)
-        console.log('✅ Sending OAuth success to frontend popup');
+        // ✅ Send to frontend via window.opener.postMessage to the EXACT origin
+        console.log('✅ Sending OAuth success to frontend popup at:', frontendOrigin);
         return res.send(`
           <html>
             <body>
+              <h3 style="text-align:center; margin-top:50px;">✅ Login Successful!</h3>
+              <p style="text-align:center;">Closing window...</p>
               <script>
+                console.log('OAuth callback page loaded');
+                console.log('window.opener exists:', !!window.opener);
+                console.log('Target origin:', '${frontendOrigin}');
+                
                 if (window.opener) {
-                  window.opener.postMessage({
-                    type: 'OAUTH_SUCCESS',
-                    token: '${token}',
-                    user: ${JSON.stringify(safeUser)}
-                  }, '*');
-                  window.close();
+                  try {
+                    console.log('Sending postMessage to opener...');
+                    window.opener.postMessage({
+                      type: 'OAUTH_SUCCESS',
+                      token: '${token}',
+                      user: ${JSON.stringify(safeUser)}
+                    }, '${frontendOrigin}');
+                    console.log('Message sent successfully');
+                    setTimeout(function() { 
+                      console.log('Closing popup...');
+                      window.close(); 
+                    }, 500);
+                  } catch (e) {
+                    console.error('Error sending message:', e);
+                    window.location.href = '${frontendOrigin}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}';
+                  }
                 } else {
-                  // Fallback if not opened as popup
-                  window.location.href = '${FRONTEND_URL}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}';
+                  console.log('No window.opener, redirecting...');
+                  window.location.href = '${frontendOrigin}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(safeUser))}';
                 }
               </script>
             </body>
@@ -146,15 +193,29 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
         `);
       } catch (error) {
         console.error('❌ Google OAuth callback error:', error);
+        
+        let frontendOrigin = FRONTEND_URL;
+        try {
+          if (req.query.state) {
+            const decoded = JSON.parse(Buffer.from(req.query.state, 'base64').toString());
+            if (decoded.origin) {
+              const url = new URL(decoded.origin);
+              frontendOrigin = url.origin;
+            }
+          }
+        } catch (e) {}
+
         return res.send(`
           <html>
             <body>
+              <h3 style="text-align:center; margin-top:50px;">❌ Login Failed</h3>
+              <p style="text-align:center;">Closing window...</p>
               <script>
                 if (window.opener) {
-                  window.opener.postMessage({ type: "OAUTH_ERROR", error: "Server error" }, "*");
-                  window.close();
+                  window.opener.postMessage({ type: "OAUTH_ERROR", error: "Server error" }, "${frontendOrigin}");
+                  setTimeout(function() { window.close(); }, 500);
                 } else {
-                  window.location.href = '${FRONTEND_URL}/login?error=server';
+                  window.location.href = '${frontendOrigin}/login?error=server';
                 }
               </script>
             </body>

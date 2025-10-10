@@ -56,11 +56,30 @@ export const oauthService = {
 
       // Listen for popup messages
       const messageHandler = (event: MessageEvent) => {
-        console.log('Received message from popup:', event.data);
+        // ✅ Filter out non-OAuth messages (React DevTools, etc.)
+        if (!event.data || typeof event.data !== 'object') {
+          return;
+        }
 
-        // Accept messages from any origin for OAuth popup communication
+        // Ignore messages from React DevTools and other extensions
+        if (event.data.source === 'react-devtools-bridge' || 
+            event.data.source === 'react-devtools-content-script' ||
+            event.data.source === 'react-devtools-backend') {
+          return;
+        }
+
+        // Only accept messages from the backend origin
+        const backendOrigin = API_BASE.replace('/api', '');
+        if (event.origin !== backendOrigin && !event.origin.includes('onrender.com')) {
+          console.log('Ignoring message from unknown origin:', event.origin);
+          return;
+        }
+
+        console.log('✅ Received OAuth message from backend:', event.data);
+
+        // Accept messages from backend for OAuth popup communication
         if (event.data.type === 'OAUTH_SUCCESS') {
-          console.log('OAuth success received:', event.data);
+          console.log('✅ OAuth success received:', event.data);
           popup.close();
           window.removeEventListener('message', messageHandler);
           resolve({
@@ -69,7 +88,7 @@ export const oauthService = {
             token: event.data.token
           });
         } else if (event.data.type === 'OAUTH_ERROR') {
-          console.error('OAuth error received:', event.data);
+          console.error('❌ OAuth error received:', event.data);
           popup.close();
           window.removeEventListener('message', messageHandler);
           resolve({
