@@ -85,6 +85,14 @@ app.use(passport.initialize());
 
 app.use(express.json());
 
+// ✅ Security headers for OAuth popup communication
+app.use((req, res, next) => {
+  // Allow popup windows to communicate with opener (required for OAuth)
+  res.setHeader('Cross-Origin-Opener-Policy', 'unsafe-none');
+  res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none');
+  next();
+});
+
 // Set fallback environment variables for development only
 if (!process.env.MONGODB_URI) {
   console.log('MONGODB_URI not set, using fallback for development');

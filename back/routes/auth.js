@@ -71,18 +71,13 @@ router.get('/config', (req, res) => {
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   // 🔹 1. התחלת ההתחברות עם Google
   router.get('/google', (req, res, next) => {
-    // ✅ Capture the origin that initiated the OAuth flow
+    // ✅ Log the origin that initiated the OAuth flow
     const origin = req.get('referer') || req.get('origin') || FRONTEND_URL;
-    
-    // Store it in the session state parameter so we can use it in the callback
-    const state = Buffer.from(JSON.stringify({ origin })).toString('base64');
-    
     console.log('🔵 OAuth initiated from origin:', origin);
     
     passport.authenticate('google', {
       scope: ['profile', 'email'],
-      session: false,
-      state: state  // Pass the origin through OAuth flow
+      session: false
     })(req, res, next);
   });
 
@@ -95,24 +90,22 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     }),
     async (req, res) => {
       try {
-        // ✅ Extract the origin from the state parameter
+        // ✅ Determine the frontend origin from referer or use default
         let frontendOrigin = FRONTEND_URL;
-        try {
-          if (req.query.state) {
-            const decoded = JSON.parse(Buffer.from(req.query.state, 'base64').toString());
-            if (decoded.origin) {
-              frontendOrigin = decoded.origin;
-              // Remove trailing slash if present
-              frontendOrigin = frontendOrigin.replace(/\/$/, '');
-              // Extract just the origin (protocol + domain)
-              if (frontendOrigin.includes('//')) {
-                const url = new URL(frontendOrigin);
-                frontendOrigin = url.origin;
-              }
+        
+        // Try to get origin from referer header (set by the popup opener)
+        const referer = req.get('referer');
+        if (referer) {
+          try {
+            const refererUrl = new URL(referer);
+            // If referer is from Vercel, use it
+            if (refererUrl.hostname.includes('vercel.app')) {
+              frontendOrigin = refererUrl.origin;
+              console.log('🔵 Using Vercel origin from referer:', frontendOrigin);
             }
+          } catch (e) {
+            console.log('Could not parse referer, using default');
           }
-        } catch (e) {
-          console.log('Could not parse state, using default frontend URL');
         }
 
         console.log('🔵 OAuth callback - will message origin:', frontendOrigin);
@@ -194,16 +187,17 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
       } catch (error) {
         console.error('❌ Google OAuth callback error:', error);
         
+        // Try to get origin for error redirect
         let frontendOrigin = FRONTEND_URL;
-        try {
-          if (req.query.state) {
-            const decoded = JSON.parse(Buffer.from(req.query.state, 'base64').toString());
-            if (decoded.origin) {
-              const url = new URL(decoded.origin);
-              frontendOrigin = url.origin;
+        const referer = req.get('referer');
+        if (referer) {
+          try {
+            const refererUrl = new URL(referer);
+            if (refererUrl.hostname.includes('vercel.app')) {
+              frontendOrigin = refererUrl.origin;
             }
-          }
-        } catch (e) {}
+          } catch (e) {}
+        }
 
         return res.send(`
           <html>

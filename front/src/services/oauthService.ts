@@ -68,19 +68,37 @@ export const oauthService = {
           return;
         }
 
-        // Only accept messages from the backend origin
-        const backendOrigin = API_BASE.replace('/api', '');
-        if (event.origin !== backendOrigin && !event.origin.includes('onrender.com')) {
-          console.log('Ignoring message from unknown origin:', event.origin);
+        // ✅ Only process messages with OAuth type (OAUTH_SUCCESS or OAUTH_ERROR)
+        if (!event.data.type || (event.data.type !== 'OAUTH_SUCCESS' && event.data.type !== 'OAUTH_ERROR')) {
           return;
         }
 
-        console.log('✅ Received OAuth message from backend:', event.data);
+        // ✅ Accept messages from backend origin (popup sends from onrender.com)
+        const backendOrigin = API_BASE.replace('/api', '');
+        const isFromBackend = event.origin === backendOrigin || 
+                             event.origin.includes('onrender.com') ||
+                             event.origin.includes('render.com');
+        
+        if (!isFromBackend) {
+          console.log('⚠️ Ignoring OAuth message from unexpected origin:', event.origin, '(expected:', backendOrigin, ')');
+          return;
+        }
+
+        console.log('✅ Received OAuth message from backend:', {
+          origin: event.origin,
+          type: event.data.type,
+          hasUser: !!event.data.user,
+          hasToken: !!event.data.token
+        });
 
         // Accept messages from backend for OAuth popup communication
         if (event.data.type === 'OAUTH_SUCCESS') {
-          console.log('✅ OAuth success received:', event.data);
-          popup.close();
+          console.log('✅ OAuth success - user logged in!');
+          try {
+            popup.close();
+          } catch (e) {
+            console.log('Could not close popup:', e);
+          }
           window.removeEventListener('message', messageHandler);
           resolve({
             success: true,
@@ -88,8 +106,12 @@ export const oauthService = {
             token: event.data.token
           });
         } else if (event.data.type === 'OAUTH_ERROR') {
-          console.error('❌ OAuth error received:', event.data);
-          popup.close();
+          console.error('❌ OAuth error received:', event.data.error);
+          try {
+            popup.close();
+          } catch (e) {
+            console.log('Could not close popup:', e);
+          }
           window.removeEventListener('message', messageHandler);
           resolve({
             success: false,
