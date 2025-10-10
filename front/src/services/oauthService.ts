@@ -14,31 +14,64 @@ console.log('Frontend OAuth Configuration:', {
 
 export const oauthService = {
   /**
+   * Wake up the server and wait for it to be ready
+   */
+  async wakeUpServer(): Promise<boolean> {
+    const backendUrl = API_BASE.replace('/api', '');
+    console.log('🔄 Waking up backend server...');
+    
+    // Try to wake up the server with multiple retries
+    for (let attempt = 1; attempt <= 5; attempt++) {
+      try {
+        console.log(`Wake-up attempt ${attempt}/5...`);
+        
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout per attempt
+        
+        const response = await fetch(`${backendUrl}/health`, {
+          method: 'GET',
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (response.ok) {
+          console.log('✅ Server is awake and ready!');
+          return true;
+        }
+        
+        console.log(`Attempt ${attempt} got status ${response.status}, retrying...`);
+      } catch (error) {
+        console.log(`Attempt ${attempt} failed:`, error instanceof Error ? error.message : 'Unknown error');
+      }
+      
+      // Wait before next attempt (progressive backoff)
+      if (attempt < 5) {
+        const waitTime = attempt * 2000; // 2s, 4s, 6s, 8s
+        console.log(`Waiting ${waitTime / 1000}s before retry...`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+      }
+    }
+    
+    console.warn('⚠️ Server wake-up attempts exhausted, proceeding anyway...');
+    return false;
+  },
+
+  /**
    * Initiate Google OAuth flow using full-page redirect (fallback method)
    */
   async initiateGoogleAuth(): Promise<void> {
     console.log('🔄 Initiating Google OAuth with full-page redirect...');
     
-    try {
-      // Wake up the server to prevent cold start
-      console.log('Waking up server...');
-      await fetch(`${API_BASE.replace('/api', '')}/wake`, { 
-        method: 'GET',
-        mode: 'no-cors' 
-      }).catch(() => {
-        // Ignore wake-up errors
-      });
-      console.log('Server wake-up complete');
-    } catch (error) {
-      console.log('Server wake up skipped:', error);
-    }
+    // Wake up the server and wait for it to be ready
+    await this.wakeUpServer();
     
-    // Small delay to ensure server is ready
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Additional small delay to ensure OAuth route is ready
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Proceed with OAuth using full-page redirect
     const googleAuthUrl = `${OAUTH_BASE}/google`;
-    console.log('Redirecting to:', googleAuthUrl);
+    console.log('✅ Redirecting to Google OAuth:', googleAuthUrl);
     window.location.href = googleAuthUrl;
   },
 
@@ -46,8 +79,12 @@ export const oauthService = {
    * Open OAuth popup window
    */
   openOAuthPopup(provider: 'google'): Promise<{ success: boolean; user?: unknown; token?: string; error?: string }> {
-    return new Promise((resolve) => {
+    return new Promise(async (resolve) => {
       console.log(`Opening ${provider} OAuth popup...`);
+
+      // ✅ Wake up server BEFORE opening popup
+      console.log('Pre-warming backend server for popup OAuth...');
+      await this.wakeUpServer();
 
       const authUrl = `${OAUTH_BASE}/${provider}`;
       const popup = window.open(

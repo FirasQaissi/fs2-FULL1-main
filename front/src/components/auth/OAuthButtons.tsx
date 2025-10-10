@@ -13,16 +13,19 @@ interface OAuthButtonsProps {
 export default function OAuthButtons({ onError }: OAuthButtonsProps) {
   const { t } = useSettings();
   const [loading, setLoading] = useState<'google' | null>(null);
+  const [loadingMessage, setLoadingMessage] = useState<string>('');
   const navigate = useNavigate();
 
   const handleOAuthClick = async (provider: 'google') => {
     try {
       setLoading(provider);
+      setLoadingMessage('Waking up server...');
       console.log(`Starting ${provider} OAuth flow...`);
 
       // ✅ Try popup first, fall back to full-page redirect
       try {
         console.log('Attempting popup OAuth flow...');
+        setLoadingMessage('Opening authentication...');
         const result = await oauthService.openOAuthPopup(provider);
 
         if (result.success && result.token && result.user) {
@@ -49,6 +52,7 @@ export default function OAuthButtons({ onError }: OAuthButtonsProps) {
         console.error('Popup error:', popupError);
         
         // Use full-page redirect as fallback
+        setLoadingMessage('Preparing redirect...');
         await oauthService.initiateGoogleAuth();
         // initiateGoogleAuth will redirect the page, so we won't reach here
         return;
@@ -57,6 +61,7 @@ export default function OAuthButtons({ onError }: OAuthButtonsProps) {
     } catch (error) {
       console.error(`${provider} OAuth error:`, error);
       setLoading(null);
+      setLoadingMessage('');
       onError?.(error instanceof Error ? error.message : `${provider} authentication failed`);
     }
   };
@@ -100,7 +105,12 @@ export default function OAuthButtons({ onError }: OAuthButtonsProps) {
       }}
     >
       {loading === provider ? (
-        <CircularProgress size={24} sx={{ color: color }} />
+        <>
+          <CircularProgress size={20} sx={{ color: color, mr: 1 }} />
+          <Box component="span" sx={{ fontSize: '0.875rem' }}>
+            {loadingMessage || 'Loading...'}
+          </Box>
+        </>
       ) : (
         <>
           {icon} {label}
