@@ -38,6 +38,7 @@ export async function http<TResponse>(
   return result as TResponse;
 }
 
-export const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
+// ✅ Use the CORRECT backend URL (smartgate-qea6.onrender.com)
+export const API_BASE = import.meta.env.VITE_API_BASE || 'https://smartgate-qea6.onrender.com';
 
 
