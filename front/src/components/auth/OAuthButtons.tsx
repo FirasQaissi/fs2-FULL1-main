@@ -8,9 +8,10 @@ import { authStorage } from '../../services/authStorage';
 
 interface OAuthButtonsProps {
   onError?: (error: string) => void;
+  onClose?: () => void;
 }
 
-export default function OAuthButtons({ onError }: OAuthButtonsProps) {
+export default function OAuthButtons({ onError, onClose }: OAuthButtonsProps) {
   const { t } = useSettings();
   const [loading, setLoading] = useState<'google' | null>(null);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
@@ -32,6 +33,12 @@ export default function OAuthButtons({ onError }: OAuthButtonsProps) {
           authStorage.setToken(result.token as string);
           authStorage.setUser(result.user as unknown as Record<string, unknown>);
           setLoading(null);
+          
+          // ✅ Close the login/register popup first
+          if (onClose) {
+            onClose();
+          }
+          
           // Redirect to home page (or dashboard if user is admin/business)
           const user = result.user as { isAdmin?: boolean; isBusiness?: boolean };
           if (user.isAdmin) {

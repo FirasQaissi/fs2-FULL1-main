@@ -8,9 +8,10 @@ import type { LoginRequest, User } from '../../types/auth';
 
 type Props = {
   onSuccess?: (user: User) => void;
+  onClose?: () => void;
 };
 
-export default function LoginForm({ onSuccess }: Props) {
+export default function LoginForm({ onSuccess, onClose }: Props) {
   const [values, setValues] = useState<LoginRequest>({ email: '', password: '', isBusiness: false });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -208,6 +209,7 @@ export default function LoginForm({ onSuccess }: Props) {
       {/* OAuth Buttons */}
       <OAuthButtons
         onError={setError}
+        onClose={onClose}
       />
 
       <ForgotPasswordForm

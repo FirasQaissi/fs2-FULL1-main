@@ -299,9 +299,9 @@ export default function AuthModal({ open, onClose, initialMode = 'login' }: Auth
             </Typography>
             
             {mode === 'login' ? (
-              <LoginForm onSuccess={handleSuccess} />
+              <LoginForm onSuccess={handleSuccess} onClose={onClose} />
             ) : (
-              <RegisterForm onSuccess={handleSuccess} />
+              <RegisterForm onSuccess={handleSuccess} onClose={onClose} />
             )}
             
             <Box sx={{ textAlign: 'center', mt: 3 }}>
