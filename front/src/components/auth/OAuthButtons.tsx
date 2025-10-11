@@ -30,17 +30,22 @@ export default function OAuthButtons({ onError, onClose }: OAuthButtonsProps) {
         const result = await oauthService.openOAuthPopup(provider);
 
         if (result.success && result.token && result.user) {
+          console.log('✅ OAuth success - closing popup and redirecting...');
           authStorage.setToken(result.token as string);
           authStorage.setUser(result.user as unknown as Record<string, unknown>);
           setLoading(null);
           
           // ✅ Close the login/register popup first
           if (onClose) {
+            console.log('🔒 Closing login popup...');
             onClose();
+          } else {
+            console.log('⚠️ onClose function not provided');
           }
           
           // Redirect to home page (or dashboard if user is admin/business)
           const user = result.user as { isAdmin?: boolean; isBusiness?: boolean };
+          console.log('🔄 Redirecting user:', { isAdmin: user.isAdmin, isBusiness: user.isBusiness });
           if (user.isAdmin) {
             navigate('/admin');
           } else if (user.isBusiness) {
@@ -55,11 +60,12 @@ export default function OAuthButtons({ onError, onClose }: OAuthButtonsProps) {
         throw new Error(result.error || 'Popup authentication failed');
 
       } catch (popupError) {
-        console.log('Popup flow failed, falling back to full-page redirect...');
+        console.log('❌ Popup flow failed, falling back to full-page redirect...');
         console.error('Popup error:', popupError);
         
         // Use full-page redirect as fallback
         setLoadingMessage('Preparing redirect...');
+        console.log('🔄 Using full-page redirect - popup will close automatically');
         await oauthService.initiateGoogleAuth();
         // initiateGoogleAuth will redirect the page, so we won't reach here
         return;

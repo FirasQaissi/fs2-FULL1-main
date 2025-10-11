@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Dialog, 
   DialogContent, 
@@ -15,7 +15,7 @@ import { Close as CloseIcon } from '@mui/icons-material';
 import { useSettings } from '../../providers/SettingsProvider';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from './LoginForm';
-
+import { authStorage } from '../../services/authStorage';
 import RegisterForm from './RegisterForm';
 import type { User } from '../../types/auth';
 
@@ -29,6 +29,20 @@ export default function AuthModal({ open, onClose, initialMode = 'login' }: Auth
   const { t, setLanguage, lang } = useSettings();
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
   const navigate = useNavigate();
+
+  // ✅ Check if user is already logged in (from OAuth callback)
+  useEffect(() => {
+    if (open) {
+      const token = authStorage.getToken();
+      const user = authStorage.getUser();
+      
+      if (token && user) {
+        console.log('✅ User already logged in, closing modal...');
+        onClose();
+        navigate(getRouteForUser(user as User));
+      }
+    }
+  }, [open, onClose, navigate]);
 
   function getRouteForUser(user: User) {
     if (user?.isAdmin) return '/admin';

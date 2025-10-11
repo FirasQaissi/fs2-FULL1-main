@@ -6,10 +6,9 @@ import type { RegisterRequest, User } from '../../types/auth';
 
 type Props = {
   onSuccess?: (user: User) => void;
-  onClose?: () => void;
 };
 
-export default function RegisterForm({ onSuccess, onClose }: Props) {
+export default function RegisterForm({ onSuccess }: Props) {
   const [values, setValues] = useState<RegisterRequest>({ name: '', email: '', password : '', phone: '', isBusiness: false });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
