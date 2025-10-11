@@ -534,7 +534,7 @@ export default function Navbar({ onLoginClick, onRegisterClick }: NavbarProps = 
                   >
                     <Box sx={{ p: 1 }}>
                       <Typography variant="subtitle2" sx={{ p: 2, color: 'text.secondary', fontWeight: 600 }}>
-                        מוצרים מובילים
+                        {t('nav.products')}
                       </Typography>
                       {topProducts.map((product) => (
                         <Box

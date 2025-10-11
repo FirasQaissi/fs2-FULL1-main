@@ -12,6 +12,7 @@ import {
 } from '@mui/icons-material';
 
 export default function CouponBar() {
+  const { t } = useSettings();
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -101,7 +102,7 @@ export default function CouponBar() {
                 lineHeight: 1.2
               }}
             >
-              🎉 הנחה מיוחדת! 20% הנחה על כל המנעולים
+              🎉 {t('coupon.specialDiscount')}
             </Typography>
             <Typography
               variant="body2"
@@ -110,7 +111,7 @@ export default function CouponBar() {
                 fontSize: { xs: '0.8rem', sm: '0.9rem' }
               }}
             >
-              קוד קופון: SMARTGATE20
+              {t('coupon.code')}: SMARTGATE20
             </Typography>
           </Box>
         </Box>

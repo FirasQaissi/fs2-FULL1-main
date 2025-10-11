@@ -23,6 +23,7 @@ import type { Product } from '../types/product';
 import { favoritesService } from '../services/favoritesService';
 import { authStorage } from '../services/authStorage';
 import { cartService } from '../services/cartService';
+import { useSettings } from '../providers/SettingsProvider';
 
 interface ProductCardProps {
   product: Product;
@@ -30,6 +31,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const navigate = useNavigate();
+  const { t } = useSettings();
   const [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(false);
   const [snack, setSnack] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({ 
@@ -214,7 +216,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 fontFamily: '"Poppins", cursive',
               }}
             >
-              ${product.price}
+              ₪{product.price}
             </Typography>
             
             <Button
@@ -238,7 +240,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 fontFamily: '"Inter", cursive',
               }}
             >
-              Add to Cart
+              {t('products.addToCart')}
             </Button>
           </Box>
         </CardContent>

@@ -23,13 +23,13 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { http, API_BASE } from '../services/http';
 import Footer from '../components/Footer';
-// Removed useSettings to avoid requiring provider when Home is rendered in isolation
-
+import { useSettings } from '../providers/SettingsProvider';
 import AuthModal from '../components/auth/AuthModal';
 import SmartLockLeadPopup from '../components/SmartLockLeadPopup';
 
 export default function Home() {
   const navigate = useNavigate();
+  const { t } = useSettings();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
   const [smartLockLeadOpen, setSmartLockLeadOpen] = useState(false);
@@ -43,20 +43,20 @@ export default function Home() {
 
   // Validation logic similar to Register/Login forms
   const nameError = useMemo(() => {
-    return contactForm.fullName.length === 0 ? '' : contactForm.fullName.trim().length < 2 ? 'הכנס שם מלא תקין' : '';
-  }, [contactForm.fullName]);
+    return contactForm.fullName.length === 0 ? '' : contactForm.fullName.trim().length < 2 ? t('contact.nameError') : '';
+  }, [contactForm.fullName, t]);
   
   const emailError = useMemo(() => {
     const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return contactForm.email.length > 0 && !EMAIL_REGEX.test(contactForm.email) ? 'הכנס כתובת אימייל תקינה' : '';
-  }, [contactForm.email]);
+    return contactForm.email.length > 0 && !EMAIL_REGEX.test(contactForm.email) ? t('contact.emailError') : '';
+  }, [contactForm.email, t]);
   
   const phoneError = useMemo(() => {
     const ISRAELI_PHONE_REGEX = /^05[0-9]{8}$/;
     return contactForm.phone.length > 0 && !ISRAELI_PHONE_REGEX.test(contactForm.phone)
-      ? 'הכנס מספר טלפון ישראלי תקין (05XXXXXXXX)'
+      ? t('contact.phoneError')
       : '';
-  }, [contactForm.phone]);
+  }, [contactForm.phone, t]);
   
   const isContactFormValid = useMemo(() => {
     const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -388,13 +388,13 @@ const features = [
   }}
 >
   <span style={{ fontFamily: 'Assistant', fontWeight: 900, fontSize: '4.3rem', color: '#ff6f00' }}>
-    מנעול חכם שמשדרג
+    {t('hero.title')}
   </span><br />
   <span style={{ fontWeight: 700 }}>
-    את הבית ביוקרה וטכנולוגיה
+    {t('hero.subtitle')}
   </span><br />
   <span style={{ fontWeight: 400, fontSize: '1.9rem', display: 'inline-block', marginTop: '1rem' ,fontFamily: 'Assistant', color: '#ff6f00'}}>
-  נעילה חכמה, בטוחה ומעוצבת – שליטה מלאה- עיצוב חדשני ונוחות מקסימלית מכל מקום ובכל זמן</span>
+  {t('hero.description')}</span>
 </Typography>
 
               <Box sx={{ 
@@ -427,7 +427,7 @@ const features = [
                     transition: 'all 0.3s ease'
                   }}
                 >
-                  למידע נוסף
+                  {t('hero.learnMore')}
                 </Button>
                 <Button
                   variant="contained"
@@ -1052,7 +1052,7 @@ const features = [
                 
                 <TextField
                   fullWidth
-                  label="אימייל"
+                  label={t('contact.email')}
                   type="email"
                   placeholder="example@gmail.com"
                   value={contactForm.email}
@@ -1101,7 +1101,7 @@ const features = [
                 
                 <TextField
                   fullWidth
-                  label="טלפון"
+                  label={t('contact.phone')}
                   placeholder="0501234567"
                   value={contactForm.phone}
                   onChange={(e) => setContactForm({...contactForm, phone: e.target.value})}

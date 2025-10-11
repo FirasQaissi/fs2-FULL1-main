@@ -58,6 +58,46 @@
     "madeWith": "Made with",
     "inIsrael": "in Israel"
   },
+  "hero": {
+    "title": "Smart Lock That Upgrades",
+    "subtitle": "Your Home with Luxury and Technology",
+    "description": "Smart, secure and designed locking – full control – innovative design and maximum comfort from anywhere and anytime",
+    "shopNow": "Shop Now",
+    "learnMore": "Learn More"
+  },
+  "features": {
+    "title": "Advanced Features",
+    "subtitle": "Smart technology for maximum security",
+    "faceRecognition": "Face Recognition",
+    "faceDesc": "Fast and secure opening with advanced face recognition",
+    "fingerprint": "Fingerprint",
+    "fingerDesc": "Instant access with precise fingerprint",
+    "smartphone": "Smartphone",
+    "phoneDesc": "Full control from your smartphone",
+    "pinCode": "PIN Code",
+    "pinDesc": "Quick access with numeric code",
+    "card": "Card",
+    "cardDesc": "Convenient opening with magnetic card",
+    "key": "Key",
+    "keyDesc": "Traditional and reliable access"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We'd be happy to help you choose the perfect solution",
+    "fullName": "Full Name",
+    "email": "Email",
+    "phone": "Phone",
+    "send": "Send Message",
+    "success": "Your message has been sent successfully!",
+    "error": "Error sending message",
+    "nameError": "Enter a valid full name",
+    "emailError": "Enter a valid email address",
+    "phoneError": "Enter a valid Israeli phone number (05XXXXXXXX)"
+  },
+  "coupon": {
+    "specialDiscount": "Special Discount! 20% off all locks",
+    "code": "Coupon Code"
+  },
   "products": {
     "title": "Smart Lock Products",
     "subtitle": "Discover our latest collection of smart locks with advanced security features",
