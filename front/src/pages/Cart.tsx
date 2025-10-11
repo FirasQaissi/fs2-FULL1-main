@@ -211,12 +211,12 @@ export default function Cart() {
                           </TableCell>
                           <TableCell align="right">
                             <Typography fontWeight={600}>
-                              ${item.price.toFixed(2)}
+                              ₪{item.price.toFixed(2)}
                             </Typography>
                           </TableCell>
                           <TableCell align="right">
                             <Typography fontWeight={600} color="primary">
-                              ${(item.price * item.quantity).toFixed(2)}
+                              ₪{(item.price * item.quantity).toFixed(2)}
                             </Typography>
                           </TableCell>
                           <TableCell align="center">
@@ -259,7 +259,7 @@ export default function Cart() {
                 
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                   <Typography>Subtotal ({itemCount} items)</Typography>
-                  <Typography fontWeight={600}>${total.toFixed(2)}</Typography>
+                  <Typography fontWeight={600}>₪{total.toFixed(2)}</Typography>
                 </Box>
                 
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
@@ -272,7 +272,7 @@ export default function Cart() {
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
                   <Typography variant="h6" fontWeight={700}>Total</Typography>
                   <Typography variant="h6" fontWeight={700} color="primary">
-                    ${total.toFixed(2)}
+                    ₪{total.toFixed(2)}
                   </Typography>
                 </Box>
                 

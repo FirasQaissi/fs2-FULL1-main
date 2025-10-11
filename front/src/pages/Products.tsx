@@ -431,7 +431,7 @@ export default function Products() {
                                     color="primary"
                                     sx={{ fontWeight: 700, fontSize: '1.2rem' }}
                                   >
-                                    ${product.price}
+                                    ₪{product.price}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>

@@ -149,7 +149,7 @@ export default function MyCard() {
                           {item.name}
                         </Typography>
                         <Typography variant="h5" color="primary" fontWeight={700}>
-                          ${item.price}
+                          ₪{item.price}
                         </Typography>
                       </Box>
 
@@ -172,7 +172,7 @@ export default function MyCard() {
                       </Box>
 
                       <Typography variant="h6" fontWeight={700} sx={{ minWidth: 100, textAlign: 'right' }}>
-                        ${(item.price * item.quantity).toFixed(2)}
+                        ₪{(item.price * item.quantity).toFixed(2)}
                       </Typography>
 
                       <IconButton
@@ -209,7 +209,7 @@ export default function MyCard() {
                         {item.name} x{item.quantity}
                       </Typography>
                       <Typography variant="body2">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        ₪{(item.price * item.quantity).toFixed(2)}
                       </Typography>
                     </Box>
                   ))}

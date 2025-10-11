@@ -270,7 +270,7 @@ export default function ProductDetail() {
                   </Typography>
                 </Box>
                 <Typography variant="h4" color="primary" fontWeight={700}>
-                  ${product.price.toFixed(2)}
+                  ₪{product.price.toFixed(2)}
                 </Typography>
               </Box>
 
@@ -363,7 +363,7 @@ export default function ProductDetail() {
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
                       <Typography variant="body2" color="text.secondary">Price</Typography>
                       <Typography variant="body2" fontWeight={500} color="primary">
-                        ${product.price.toFixed(2)}
+                        ₪{product.price.toFixed(2)}
                       </Typography>
                     </Box>
                     <Divider />

@@ -1305,7 +1305,7 @@ export default function Admin() {
                       type: 'number',
                       renderCell: (params) => (
                         <Typography variant="subtitle2" color="primary" fontWeight={600}>
-                          ${Number(params.value || 0).toFixed(2)}
+                          ₪{Number(params.value || 0).toFixed(2)}
                         </Typography>
                       )
                     },
