@@ -315,7 +315,7 @@ export default function AuthModal({ open, onClose, initialMode = 'login' }: Auth
             {mode === 'login' ? (
               <LoginForm onSuccess={handleSuccess} onClose={onClose} />
             ) : (
-              <RegisterForm onSuccess={handleSuccess} onClose={onClose} />
+              <RegisterForm onSuccess={handleSuccess} />
             )}
             
             <Box sx={{ textAlign: 'center', mt: 3 }}>
