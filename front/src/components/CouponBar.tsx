@@ -10,6 +10,7 @@ import {
   LocalOffer as OfferIcon,
   Timer as TimerIcon
 } from '@mui/icons-material';
+import { useSettings } from '../providers/SettingsProvider';
 
 export default function CouponBar() {
   const { t } = useSettings();
