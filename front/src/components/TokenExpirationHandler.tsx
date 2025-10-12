@@ -49,7 +49,7 @@ export default function TokenExpirationHandler({ children }: TokenExpirationHand
     const expMs = getTokenExpiryMs(token);
     if (!token || !expMs) return;
     const now = Date.now();
-    const leadMs = 15 * 1000; // show 15s before expiry
+    const leadMs = 5 * 60 * 1000; // show 5 minutes before expiry
     const delay = Math.max(0, expMs - now - leadMs);
     const id = window.setTimeout(() => {
       // If already expired or about to expire, show dialog
@@ -101,23 +101,28 @@ export default function TokenExpirationHandler({ children }: TokenExpirationHand
   const handleContinue = async () => {
     try {
       (window as unknown as { __refreshingToken?: boolean }).__refreshingToken = true;
+      console.log('🔄 Attempting to refresh token...');
+      
       const { token } = await authService.refresh();
       if (token) {
+        console.log('✅ Token refreshed successfully');
         authStorage.setToken(token);
         setShowExpiredDialog(false);
         // Notify app that auth state changed
         window.dispatchEvent(new CustomEvent('authRefreshed'));
-        // Send user to home to avoid blank/locked routes
-        navigate('/', { replace: true });
+        // Reschedule the expiry check with new token
+        scheduleExpiryCheck();
+        console.log('✅ Session extended successfully');
+      } else {
+        throw new Error('No token received from refresh');
       }
     } catch (e) {
-      // If refresh fails, continue as guest and route to home
-      console.error('Token refresh failed:', e);
+      console.error('❌ Token refresh failed:', e);
+      // If refresh fails, show error but don't automatically logout
+      // Let user decide what to do
       setShowExpiredDialog(false);
-      authStorage.clear();
-      // Notify app to resubscribe timers/handlers in guest mode
-      window.dispatchEvent(new CustomEvent('authRefreshed'));
-      navigate('/', { replace: true });
+      // Don't clear auth storage - let user try again or logout manually
+      console.log('⚠️ Refresh failed, but keeping user logged in for now');
     }
     finally {
       (window as unknown as { __refreshingToken?: boolean }).__refreshingToken = false;
@@ -200,7 +205,7 @@ export default function TokenExpirationHandler({ children }: TokenExpirationHand
               color: 'darkgray'
             }}
           >
-            Your session has expired. Do you want to continue browsing or log out?
+            Your session will expire soon. Do you want to stay logged in?
           </Typography>
           
           <Typography 
@@ -214,7 +219,7 @@ export default function TokenExpirationHandler({ children }: TokenExpirationHand
               opacity: 0.8
             }}
           >
-            You can continue browsing as a guest or return to the login page to sign in again.
+            Click "Continue" to extend your session, or "Logout" to sign out now.
           </Typography>
         </DialogContent>
 
@@ -247,7 +252,7 @@ export default function TokenExpirationHandler({ children }: TokenExpirationHand
               transition: 'all 0.3s ease'
             }}
           >
-            Continue
+            Stay Logged In
           </Button>
 
           <Button
