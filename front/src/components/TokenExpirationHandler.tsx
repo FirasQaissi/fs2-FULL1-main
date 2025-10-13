@@ -219,7 +219,7 @@ export default function TokenExpirationHandler({ children }: TokenExpirationHand
               opacity: 0.8
             }}
           >
-            Click "Continue" to extend your session, or "Logout" to sign out now.
+            Click "Stay Logged In" to extend your session, or "Logout" to sign out now.
           </Typography>
         </DialogContent>
 
