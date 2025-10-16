@@ -289,7 +289,7 @@ smart-gate/
 
 ```env
 # Database
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/smartgate
+MONGODB_URI=mongodb://localhost:27017/smartgate
 DB_NAME=smartgate
 
 # Server
