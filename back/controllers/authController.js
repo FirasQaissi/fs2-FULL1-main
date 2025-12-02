@@ -102,7 +102,7 @@ async function register(req, res) {
     // Log user registration
     logger.userRegister(created._id, created.email);
     
-    const token = jwt.sign({ userId: created._id }, JWT_SECRET, { expiresIn: '10m' });
+    const token = jwt.sign({ userId: created._id }, JWT_SECRET, { expiresIn: '60m' });
     return res.status(201).json({ user: { _id: created._id, name: created.name, email: created.email, phone: created.phone, isAdmin: !!created.isAdmin, isBusiness: !!created.isBusiness, isUser: created.isUser !== false }, token });
   } catch (err) {
     console.error('Register error', err);
