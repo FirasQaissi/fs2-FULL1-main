@@ -48,7 +48,7 @@ async function login(req, res) {
     // Log user login
     logger.userLogin(user._id, user.email, req.ip);
 
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '60m' });
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
 
     const safeUser = {
       _id: user._id,
@@ -102,7 +102,7 @@ async function register(req, res) {
     // Log user registration
     logger.userRegister(created._id, created.email);
     
-    const token = jwt.sign({ userId: created._id }, JWT_SECRET, { expiresIn: '60m' });
+    const token = jwt.sign({ userId: created._id }, JWT_SECRET, { expiresIn: '1h' });
     return res.status(201).json({ user: { _id: created._id, name: created.name, email: created.email, phone: created.phone, isAdmin: !!created.isAdmin, isBusiness: !!created.isBusiness, isUser: created.isUser !== false }, token });
   } catch (err) {
     console.error('Register error', err);
@@ -164,7 +164,7 @@ async function refresh(req, res) {
     }
 
     // Optionally, you could enforce a grace period here
-    const newToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '60m' });
+    const newToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
     return res.json({ token: newToken });
   } catch (err) {
     return res.status(500).json({ message: 'Server error' });
