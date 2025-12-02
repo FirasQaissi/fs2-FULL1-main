@@ -49,7 +49,7 @@ export default function TokenExpirationHandler({ children }: TokenExpirationHand
     const expMs = getTokenExpiryMs(token);
     if (!token || !expMs) return;
     const now = Date.now();
-    const leadMs = 5 * 60 * 1000; // show 5 minutes before expiry
+    const leadMs = 50 * 60 * 1000; // show 50 minutes before expiry
     const delay = Math.max(0, expMs - now - leadMs);
     const id = window.setTimeout(() => {
       // If already expired or about to expire, show dialog

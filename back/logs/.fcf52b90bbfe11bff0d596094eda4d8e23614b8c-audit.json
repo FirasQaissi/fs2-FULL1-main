@@ -6,24 +6,9 @@
     "auditLog": "C:\\Users\\Firas\\Downloads\\fs2-FULL1-main\\back\\logs\\.fcf52b90bbfe11bff0d596094eda4d8e23614b8c-audit.json",
     "files": [
         {
-            "date": 1759589190229,
-            "name": "C:\\Users\\Firas\\Downloads\\fs2-FULL1-main\\back\\logs\\application-2025-10-04.log",
-            "hash": "21f502b6d2a3f052933ad8867e2ccb526edbc5ca381c7fd61c1d51efa0151204"
-        },
-        {
-            "date": 1759612106259,
-            "name": "C:\\Users\\Firas\\Downloads\\fs2-FULL1-main\\back\\logs\\application-2025-10-05.log",
-            "hash": "d91d8c2ba269894d1c4325739f1bdba83670ef7db789573c41b655ae61672ed6"
-        },
-        {
-            "date": 1759702183701,
-            "name": "C:\\Users\\Firas\\Downloads\\fs2-FULL1-main\\back\\logs\\application-2025-10-06.log",
-            "hash": "18a4ee7b2541f6c0cd1a70f614f643bcab89479590e47e5603a6bef71202228b"
-        },
-        {
-            "date": 1760282242086,
-            "name": "C:\\Users\\Firas\\Downloads\\fs2-FULL1-main\\back\\logs\\application-2025-10-12.log",
-            "hash": "25cf5dabd41e7d904967de729ac1d0a8c385a5831e91064bef185c1d476ec996"
+            "date": 1763928284915,
+            "name": "C:\\Users\\Firas\\Downloads\\fs2-FULL1-main\\back\\logs\\application-2025-11-23.log",
+            "hash": "a1baefc15f8343b6efbcd2e7ed33297c74a3248fa5e71b7ad6219184fcfcd8f6"
         }
     ],
     "hashType": "sha256"
