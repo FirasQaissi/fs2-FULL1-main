@@ -164,7 +164,7 @@ async function refresh(req, res) {
     }
 
     // Optionally, you could enforce a grace period here
-    const newToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '10m' });
+    const newToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '60m' });
     return res.json({ token: newToken });
   } catch (err) {
     return res.status(500).json({ message: 'Server error' });
