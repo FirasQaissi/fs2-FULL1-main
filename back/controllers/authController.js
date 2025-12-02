@@ -48,7 +48,7 @@ async function login(req, res) {
     // Log user login
     logger.userLogin(user._id, user.email, req.ip);
 
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '10m' });
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '60m' });
 
     const safeUser = {
       _id: user._id,
