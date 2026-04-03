@@ -135,7 +135,7 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
         sx: {
           width: { xs: '100vw', sm: 420 },
           background: (theme) => theme.palette.mode === 'dark'
-            ? 'linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 100%)'
+            ? 'linear-gradient(180deg, #1a1a1a 0%,rgb(53, 53, 53) 100%)'
             : 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
           backdropFilter: 'blur(20px)',
           borderLeft: (theme) => `1px solid ${theme.palette.divider}`,
