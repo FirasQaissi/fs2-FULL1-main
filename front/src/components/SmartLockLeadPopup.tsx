@@ -151,8 +151,8 @@ export default function SmartLockLeadPopup({ open, onClose }: SmartLockLeadPopup
       }
     } catch (error) {
       console.error('Network error:', error);
-      setError('שגיאה בחיבור לשרת. אנא נסה שוב');
-    } finally {
+      setError('שגיאה בחיבור לשרת בשליחת הנתונים. אנא נסה שוב');
+    } finally { 
       setLoading(false);
     }
   };
