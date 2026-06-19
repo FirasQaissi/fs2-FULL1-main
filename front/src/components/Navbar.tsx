@@ -5,8 +5,6 @@ import {
   Button,
   IconButton,
   Box,
-  TextField,
-  InputAdornment,
   Menu,
   MenuItem,
   Avatar,
@@ -20,11 +18,9 @@ import {
   ListItemText,
   ListItemIcon,
   Divider,
-  Typography,
-  Paper
+  Typography
 } from '@mui/material';
 import {
-  Search as SearchIcon,
   ShoppingBasket as ShoppingBasketIcon,
   Favorite as FavoriteIcon,
   Menu as MenuIcon,
@@ -47,7 +43,6 @@ import { authStorage } from '../services/authStorage';
 import { authService } from '../services/authService';
 import { useSettings } from '../providers/SettingsProvider';
 import { cartService } from '../services/cartService';
-import { productService } from '../services/productService';
 import AdminSidebar from './AdminSidebar';
 
 interface NavbarProps {
@@ -62,13 +57,10 @@ export default function Navbar({ onLoginClick, onRegisterClick }: NavbarProps = 
   const navigate = useNavigate();
   const location = useLocation();
   
-  const [searchQuery, setSearchQuery] = useState('');
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [adminSidebarOpen, setAdminSidebarOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
-  const [products, setProducts] = useState<{ id: string; name: string; price: number }[]>([]);
-  const [searchDropdownOpen, setSearchDropdownOpen] = useState(false);
   
   const isAuthenticated = authStorage.getToken();
   const user = authStorage.getUser<{ name?: string; isAdmin?: boolean; isBusiness?: boolean }>();
@@ -88,52 +80,6 @@ export default function Navbar({ onLoginClick, onRegisterClick }: NavbarProps = 
       window.removeEventListener('cartUpdated', updateCartCount);
     };
   }, []);
-
-  // Load products for search
-  useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        const productsData = await productService.getAllProducts();
-        // Transform products to ensure consistent ID format
-        const transformedProducts = productsData.map(product => ({
-          id: product.id || product._id || '',
-          name: product.name,
-          price: product.price
-        }));
-        setProducts(transformedProducts);
-      } catch (error) {
-        console.error('Failed to load products for search:', error);
-      }
-    };
-    loadProducts();
-  }, []);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery('');
-      setSearchDropdownOpen(false);
-    }
-  };
-
-  const handleSearchFocus = () => {
-    setSearchDropdownOpen(true);
-  };
-
-  const handleSearchBlur = () => {
-    // Delay to allow clicking on dropdown items
-    setTimeout(() => setSearchDropdownOpen(false), 200);
-  };
-
-  const handleProductSelect = (product: { id: string; name: string; price: number }) => {
-    navigate(`/products/${product.id}`);
-    setSearchQuery('');
-    setSearchDropdownOpen(false);
-  };
-
-  // Get top 5 products for dropdown
-  const topProducts = products.slice(0, 5);
 
   const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setUserMenuAnchor(event.currentTarget);
@@ -199,40 +145,6 @@ export default function Navbar({ onLoginClick, onRegisterClick }: NavbarProps = 
           </Typography>
         </Box>
         
-        
-        {/* Search Bar */}
-        <Box component="form" onSubmit={handleSearch} sx={{ mb: 2 }}>
-          <TextField
-            fullWidth
-                  placeholder={t('common.searchProducts')}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            size="small"
-            sx={(theme) => ({
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)',
-                borderRadius: '25px',
-                '& fieldset': { borderColor: 'transparent' },
-                '&:hover fieldset': { borderColor: theme.palette.divider },
-                '&.Mui-focused fieldset': { borderColor: theme.palette.primary.main },
-              },
-              '& .MuiInputBase-input': {
-                color: theme.palette.text.primary,
-                '&::placeholder': { color: theme.palette.text.secondary },
-              },
-            })}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton type="submit" size="small" sx={{ color: 'inherit' }}>
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
-
         <Divider sx={(theme) => ({ backgroundColor: theme.palette.divider, mb: 2 })} />
 
         {/* Navigation Items */}
@@ -440,129 +352,6 @@ export default function Navbar({ onLoginClick, onRegisterClick }: NavbarProps = 
           {/* Desktop Navigation */}
           {!isMobile && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-              {/* Enhanced Search Bar with Dropdown */}
-              <Box sx={{ minWidth: 350, position: 'relative' }}>
-                <Box component="form" onSubmit={handleSearch}>
-                  <TextField
-                    fullWidth
-                    placeholder={t('common.searchProducts')}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onFocus={handleSearchFocus}
-                    onBlur={handleSearchBlur}
-                    size="medium"
-                    sx={(theme) => ({
-                      '& .MuiOutlinedInput-root': {
-                        backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)',
-                        borderRadius: '30px',
-                        fontSize: '1.1rem',
-                        fontWeight: 500,
-                        height: '50px',
-                        '& fieldset': { 
-                          borderColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)',
-                          borderWidth: '2px'
-                        },
-                        '&:hover fieldset': { 
-                          borderColor: theme.palette.mode === 'dark' ? '#00d4aa' : '#6c63ff',
-                          borderWidth: '2px'
-                        },
-                        '&.Mui-focused fieldset': { 
-                          borderColor: theme.palette.mode === 'dark' ? '#00d4aa' : '#6c63ff',
-                          borderWidth: '2px'
-                        },
-                        transition: 'all 0.3s ease'
-                      },
-                      '& .MuiInputBase-input': {
-                        color: theme.palette.text.primary,
-                        fontWeight: 500,
-                        '&::placeholder': { 
-                          color: theme.palette.text.secondary,
-                          fontWeight: 400
-                        }
-                      }
-                    })}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <SearchIcon sx={{ 
-                            color: 'text.secondary',
-                            fontSize: '1.4rem',
-                            mr: 1
-                          }} />
-                        </InputAdornment>
-                      ),
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton 
-                            type="submit" 
-                            size="medium" 
-                            sx={{ 
-                              color: 'primary.main',
-                              '&:hover': {
-                                backgroundColor: 'primary.main',
-                                color: 'white'
-                              },
-                              transition: 'all 0.3s ease'
-                            }}
-                          >
-                            <SearchIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Box>
-
-                {/* Search Dropdown */}
-                {searchDropdownOpen && topProducts.length > 0 && (
-                  <Paper
-                    sx={{
-                      position: 'absolute',
-                      top: '100%',
-                      left: 0,
-                      right: 0,
-                      zIndex: 1000,
-                      mt: 1,
-                      borderRadius: '12px',
-                      boxShadow: (theme) => theme.palette.mode === 'dark'
-                        ? '0 8px 32px rgba(0, 0, 0, 0.4)'
-                        : '0 8px 32px rgba(0, 0, 0, 0.15)',
-                      border: (theme) => `1px solid ${theme.palette.divider}`,
-                      maxHeight: 300,
-                      overflow: 'auto'
-                    }}
-                  >
-                    <Box sx={{ p: 1 }}>
-                      <Typography variant="subtitle2" sx={{ p: 2, color: 'text.secondary', fontWeight: 600 }}>
-                        {t('nav.products')}
-                      </Typography>
-                      {topProducts.map((product) => (
-                        <Box
-                          key={product.id}
-                          onClick={() => handleProductSelect(product)}
-                          sx={{
-                            p: 2,
-                            cursor: 'pointer',
-                            borderRadius: '8px',
-                            '&:hover': {
-                              backgroundColor: 'action.hover'
-                            },
-                            transition: 'background-color 0.2s ease'
-                          }}
-                        >
-                          <Typography variant="body1" fontWeight={500} sx={{ mb: 0.5 }}>
-                            {product.name}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            ₪{product.price}
-                          </Typography>
-                        </Box>
-                      ))}
-                    </Box>
-                  </Paper>
-                )}
-              </Box>
-
               {/* Navigation Links */}
               <Box sx={{ display: 'flex', gap: 1 }} dir={lang === 'en' ? 'ltr' : 'rtl'}>
                 {navItems.map((item) => (
