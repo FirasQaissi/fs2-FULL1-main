@@ -417,7 +417,7 @@ const features = [
                     transition: 'all 0.4s ease'
                   }}
                 >
-                  אני גם רוצה  SMARTLOCK
+                  אני רוצה להתקין 
                 </Button>
               </Box>
             </Box>
